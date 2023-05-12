@@ -6,7 +6,7 @@ export default{
       this.axios.get(this.api + "/user").then((res) => {
         this.isLoading = true;
         if (res.status == 200) {
-          this.$router.push("/dashboard");
+          this.$router.push("/stores");
         }
       }).catch((err) => {
         if (err.response.status == 401) {
