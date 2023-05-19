@@ -1,19 +1,28 @@
 <script>
 import { RouterView, RouterLink } from 'vue-router';
 import Nav from '../../components/Nav.vue';
+import TopBar from "../../components/TopBar.vue";
 
 export default {
+  props: {
+    "active": String,
+  },
+  emits: ['locationChange'],
   components: {
-    Nav
+    Nav, TopBar
+  },
+  mounted(){
+    this.$emit('locationChange', location.pathname);
   }
 }
 </script>
 
 <template>
-  <div class="d-flex">
-    <Nav class="p2" />
-    <main class="p2 flex-grow-1">
-      Dashboard
+  <TopBar title="Dashboard" />
+  <div class="row" style="width: 100%;">
+    <Nav class="col-md-2" :active="active" />
+    <main class="col">
+
     </main>
   </div>
 </template>

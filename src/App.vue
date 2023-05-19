@@ -1,12 +1,18 @@
 <script>
 import { RouterView } from 'vue-router';
-export default{
+
+export default {
+  data() {
+    return { 
+      pathname: "/"
+    };
+  },
   methods: {
     async checkAuthenticStatus() {
       this.axios.get(this.api + "/user").then((res) => {
         this.isLoading = true;
         if (res.status == 200) {
-          this.$router.push("/dashboard");
+          this.$router.push(this.pathname);
         }
       }).catch((err) => {
         if (err.response.status == 401) {
@@ -16,15 +22,19 @@ export default{
         this.isLoading = false;
       });
     },
+    changeLocation(path) {
+      this.pathname = path;
+    }
   },
   mounted() {
+    this.pathname = location.pathname;
     this.checkAuthenticStatus();
   }
 }
 </script>
 
 <template>
-  <RouterView />
+  <RouterView @location-change="(newPath)=>{changeLocation(newPath)}"  :active="pathname" />
 </template>
 
 <style>

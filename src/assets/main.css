@@ -1,11 +1,42 @@
 @import './base.css';
 
+body{
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
+}
+
 #app {
-  margin-top: 0px;
-  padding-top: 0px;
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
   width: 100%;
   font-weight: normal;
   color: white;
+}
+
+.text-accordion:hover{
+  text-decoration: underline;
+}
+
+.text-accordion {
+  color: rgb(122, 188, 255);
+}
+
+.tile-accordion:hover{
+  cursor: pointer;
+  box-shadow: 1px 1px 20px 5px;
+}
+
+.icon-color{
+  cursor: pointer;
+  color: white;
+}
+
+.toast-body{
+  color: black;
+}
+
+.error{
+  color: red;
 }
 
 .container-bg{
