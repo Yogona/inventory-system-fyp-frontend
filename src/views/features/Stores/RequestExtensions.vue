@@ -620,7 +620,7 @@ export default {
                 <!-- Button trigger create user modal -->
                 <button type="button" class="btn btn-dark" data-bs-toggle="modal"
                     data-bs-target="#request-instruments-modal">
-                    Request Instruments
+                    Request Extension
                 </button>
             </div>
         </div>
@@ -673,6 +673,16 @@ export default {
                                         <span :hidden="isLoading">Deallocate</span>
                                         <div :hidden="!isLoading" class="spinner-border text-light"
                                             role="deallocate-progress">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div v-if="request.status_id.id == 2" class="col">
+                                    <button type="button" :class="{ disabled: isLoading }" @click="allocate(request)"
+                                        class="btn btn-primary">
+                                        <span :hidden="isLoading">Extend</span>
+                                        <div :hidden="!isLoading" class="spinner-border text-light"
+                                            role="allocate-progress">
                                             <span class="visually-hidden">Loading...</span>
                                         </div>
                                     </button>

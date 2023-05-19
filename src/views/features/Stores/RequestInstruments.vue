@@ -5,6 +5,7 @@ export default {
         BIconPenFill, BIconTrash
     },
     emits: ['backClicked'],
+    props: ["user"],
     data() {
         return {
             isLoading: false,
@@ -602,8 +603,8 @@ export default {
                 </form>
             </div>
             
-            <div class="col">
-                <!-- Button trigger create user modal -->
+            <div v-if="user.role_id == 1 || user.role_id == 4" class="col">
+                <!-- Button triggers request instruments modal -->
                 <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#request-instruments-modal">
                     Request Instruments
                 </button>
@@ -642,7 +643,7 @@ export default {
                         <th>{{ request.status_id.name }}</th>
                         <td>
                             <div class="row gx-2">
-                                <div v-if="request.status_id.id == 1" class="col">
+                                <div v-if="(request.status_id.id == 1) && (user.role_id == 1 || user.role_id == 3)" class="col">
                                     <button type="button" :class="{ disabled: isLoading }" @click="allocate(request)" class="btn btn-success">
                                         <span :hidden="isLoading">Allocate</span>
                                         <div :hidden="!isLoading" class="spinner-border text-light" role="allocate-progress">
@@ -650,7 +651,7 @@ export default {
                                         </div>
                                     </button>
                                 </div>
-                                <div v-else-if="request.status_id.id == 2" class="col">
+                                <div v-else-if="(request.status_id.id == 2) && (user.role_id == 1 || user.role_id == 3)" class="col">
                                     <button type="button" :class="{ disabled: isLoading }" @click="deallocate(request)" class="btn btn-danger">
                                         <span :hidden="isLoading">Deallocate</span>
                                         <div :hidden="!isLoading" class="spinner-border text-light" role="deallocate-progress">

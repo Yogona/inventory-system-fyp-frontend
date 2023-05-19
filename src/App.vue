@@ -4,7 +4,8 @@ import { RouterView } from 'vue-router';
 export default {
   data() {
     return { 
-      pathname: "/"
+      pathname: "/",
+      user: null,
     };
   },
   methods: {
@@ -13,6 +14,7 @@ export default {
         this.isLoading = true;
         if (res.status == 200) {
           this.$router.push(this.pathname);
+          this.user = res.data;console.log(this.user)
         }
       }).catch((err) => {
         if (err.response.status == 401) {
@@ -34,7 +36,7 @@ export default {
 </script>
 
 <template>
-  <RouterView @location-change="(newPath)=>{changeLocation(newPath)}"  :active="pathname" />
+  <RouterView @location-change="(newPath)=>{changeLocation(newPath)}" :user="user"  :active="pathname" />
 </template>
 
 <style>

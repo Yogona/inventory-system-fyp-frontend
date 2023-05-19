@@ -12,6 +12,7 @@ export default {
     },
     props: {
         "active": String,
+        "user": Object,
     },
     emits: ['locationChange'],
     data() {
@@ -233,7 +234,7 @@ export default {
         }
     },
     async mounted() {
-        this.currentTab = RequestExtensions;
+        this.currentTab = null;
         this.$emit('locationChange', location.pathname);
         await this.getStoreKeepers();
         await this.getDepartments();
@@ -402,7 +403,7 @@ export default {
 
     <TopBar title="Stores" />
     <div class="row">
-        <Nav class="col-md-2" :active="active" />
+        <Nav class="col-md-2" :user="user" :active="active" />
         <main v-if="currentTab == null" class="col">
             <div class="row mb-3 mt-2">
                 <div class="col-md-6">
@@ -410,7 +411,7 @@ export default {
                         <input v-model="searchQuery" class="form-control me-2" type="search" placeholder="Type to search" aria-label="Search">
                     </form>
                 </div>
-                <div class="col">
+                <div v-if="user.role_id == 1" class="col">
                     <!-- Button trigger create store modal -->
                     <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#create-store-modal">
                         Create Store
@@ -463,7 +464,7 @@ export default {
                             </div>
                             
                             <hr/>
-                            <div class="row">
+                            <div v-if="user.role_id == 1" class="row">
                                 <div @click="prefillForm(store)" data-bs-toggle="modal" data-bs-target="#update-store-modal" class="col text-accordion">
                                     Edit
                                 </div>
@@ -477,7 +478,7 @@ export default {
                 </div>
             </div>
         </main>
-        <component v-else class="col" @back-clicked="()=>{showStores();}" :store-id="storeId" :is="currentTab"/>
+        <component :user="user" v-else class="col" @back-clicked="()=>{showStores();}" :store-id="storeId" :is="currentTab"/>
     </div>
 </template>
 

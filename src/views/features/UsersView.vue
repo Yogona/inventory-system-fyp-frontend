@@ -9,6 +9,7 @@ export default {
     },
     props: {
         "active": String,
+        "user": Object,
     },
     emits: ['locationChange'],
     data() {
@@ -687,7 +688,7 @@ export default {
     <TopBar title="Users" />
     
     <div class="row">
-        <Nav class="col-md-2" :active="active" />
+        <Nav class="col-md-2" :user="user" :active="active" />
         <main class="col-md-10">
             <div class="row mb-1 mt-2">
                 <div class="col-md-4">

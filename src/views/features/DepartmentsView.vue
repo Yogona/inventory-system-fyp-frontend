@@ -7,6 +7,7 @@ import { BIconPenFill, BIconTrash } from 'bootstrap-icons-vue';
 export default {
     props: {
         "active": String,
+        "user": Object,
     },
     components: {
         Nav, TopBar,
@@ -221,7 +222,7 @@ export default {
 
     <TopBar title="Departments" />
     <div class="row">
-        <Nav class="col-md-2" :active="active" />
+        <Nav class="col-md-2" :user="user" :active="active" />
         <main class="col">
             <div class="row mb-3 mt-2">
                 <div class="col-md-6">

@@ -6,6 +6,7 @@ import TopBar from "../../components/TopBar.vue";
 export default {
   props: {
     "active": String,
+    "user":Object
   },
   emits: ['locationChange'],
   components: {
@@ -20,7 +21,7 @@ export default {
 <template>
   <TopBar title="Dashboard" />
   <div class="row" style="width: 100%;">
-    <Nav class="col-md-2" :active="active" />
+    <Nav class="col-md-2" :user="user" :active="active" />
     <main class="col">
 
     </main>

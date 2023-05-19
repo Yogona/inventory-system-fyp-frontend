@@ -1,7 +1,7 @@
 <script>
 export default {
   props: [
-    "active"
+    "active", "user"
   ],
   data() {
     return {
@@ -51,10 +51,10 @@ export default {
           <li class="nav-item mb-3 ms-3">
             <RouterLink @click="$emit('menuSelection', 'dash')" class="nav-link" :class="{active:isDashboard}" :aria-current="{page:isDashboard}" to="/dashboard">Dashboard</RouterLink>
           </li>
-          <li class="nav-item mb-3 ms-3">
+          <li v-if="user.role_id == 1" class="nav-item mb-3 ms-3">
               <RouterLink class="nav-link" :class="{ active: isDepartments }" :aria-current="{ page: isDepartments }" to="/departments">Departments</RouterLink>
             </li>
-          <li class="nav-item mb-3 ms-3">
+          <li v-if="user.role_id == 1" class="nav-item mb-3 ms-3">
             <RouterLink class="nav-link" :class="{active:isUsers}" :aria-current="{ page: isUsers }" to="/users">Users</RouterLink>
           </li>
           <li class="nav-item mb-3 ms-3">

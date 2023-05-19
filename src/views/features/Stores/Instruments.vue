@@ -3,7 +3,7 @@ import { BIconPenFill, BIconTrash } from 'bootstrap-icons-vue';
 
 export default {
     emits: ['backClicked'],
-    props: ['storeId'],
+    props: ['storeId', "user"],
     components: {
         BIconPenFill, BIconTrash
     },
@@ -221,6 +221,9 @@ export default {
             });
         },
     },
+    computed: {
+        
+    },
     async mounted() {
         this.toast = this.Toast.getOrCreateInstance(this.$refs.feedbackToast);
         await this.getInstruments();
@@ -326,7 +329,7 @@ export default {
                         aria-label="Search">
                 </form>
             </div>
-            <div class="col">
+            <div v-if="(user.role_id == 1 || user.role_id == 3)" class="col">
                 <!-- Button trigger create user modal -->
                 <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#register-instruments-modal">
                     Register
@@ -407,7 +410,7 @@ export default {
                     <td>{{ instrument.code }}</td>
                     <td>{{ instrument.added_by }}</td>
                     <td>
-                        <div class="row gx-3">
+                        <div v-if="(user.role_id == 1 || user.role_id == 3)" class="row gx-3">
                             <div class="col">
                                 <BIconPenFill @click="preFillUpdatingFields(instrument)" class="icon-color" data-bs-toggle="modal" data-bs-target="#update-instrument-modal" />
                             </div>
