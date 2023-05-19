@@ -58,7 +58,6 @@ export default{
 <template>
   <div id="login-pane" class="container-bg white-text">
     <form @submit.prevent="onSubmit">
-      <span>{{ username }}</span>
       <em class="mb-5 text-center"><h2>Inventory System</h2></em>
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>

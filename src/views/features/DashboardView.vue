@@ -4,8 +4,15 @@ import Nav from '../../components/Nav.vue';
 import TopBar from "../../components/TopBar.vue";
 
 export default {
+  props: {
+    "active": String,
+  },
+  emits: ['locationChange'],
   components: {
     Nav, TopBar
+  },
+  mounted(){
+    this.$emit('locationChange', location.pathname);
   }
 }
 </script>
@@ -13,7 +20,7 @@ export default {
 <template>
   <TopBar title="Dashboard" />
   <div class="row" style="width: 100%;">
-    <Nav class="col-md-2" active="dash" />
+    <Nav class="col-md-2" :active="active" />
     <main class="col">
 
     </main>

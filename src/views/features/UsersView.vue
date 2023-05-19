@@ -7,6 +7,10 @@ export default {
     components: {
         Nav, TopBar, BIconPenFill, BIconTrash
     },
+    props: {
+        "active": String,
+    },
+    emits: ['locationChange'],
     data() {
         return {
             isLoading: false,
@@ -133,51 +137,54 @@ export default {
             this.selectedDepartment = null;
         },
         async createUser() {
-            //We clear these fields because it avoids interlace of requests feedbacks
-            this.title = null;
-            this.message = null;
-
-            // if (this.password != this.confirmPass) {
-            //     this.passError = "**Passwords do not match.*";
-            // } else if (this.$refs.form.checkValidity()) {
-            // }
-            this.isLoading = true;
-
-            const data = {
-                "first_name": this.firstName,
-                "last_name": this.lastName,
-                "username": this.username,
-                "gender": this.gender,
-                "email": this.email,
-                "phone": this.phone,
-                "role_id": this.selectedRole,
-                "department_id": this.selectedDepartment
-            };
-
-            await this.axios.post(this.api + "/users/create", data).then((res) => {
-                const resData = res.data;
-                this.title = "Succeeded";
-                this.message = resData.message;
-
-                //Clears create user form fields
-                this.clearFields();
-
-                this.getUsers();
-            }).catch((err) => {
-                const res = err.response;
-                const resData = res.data;
-
-                if (res.status == 422) {
-                    this.title = resData.message;
-                    this.message = resData.data;
-                } else {
-                    this.title = "Failed";
+            if (this.$refs.form.checkValidity()) {
+                //We clear these fields because it avoids interlace of requests feedbacks
+                this.title = null;
+                this.message = null;
+    
+                // if (this.password != this.confirmPass) {
+                //     this.passError = "**Passwords do not match.*";
+                // } else if (this.$refs.form.checkValidity()) {
+                // }
+                this.isLoading = true;
+    
+                const data = {
+                    "first_name": this.firstName,
+                    "last_name": this.lastName,
+                    "username": this.username,
+                    "gender": this.gender,
+                    "email": this.email,
+                    "phone": this.phone,
+                    "role_id": this.selectedRole,
+                    "department_id": this.selectedDepartment
+                };
+    
+                await this.axios.post(this.api + "/users/create", data).then((res) => {
+                    const resData = res.data;
+                    this.title = "Succeeded";
                     this.message = resData.message;
-                }
-            }).finally(() => {
-                this.isLoading = false;
-                this.toast.show();
-            });
+    
+                    //Clears create user form fields
+                    this.clearFields();
+    
+                    this.getUsers();
+                }).catch((err) => {
+                    const res = err.response;
+                    const resData = res.data;
+    
+                    if (res.status == 422) {
+                        this.title = resData.message;
+                        this.message = resData.data;
+                    } else {
+                        this.title = "Failed";
+                        this.message = resData.message;
+                    }
+                }).finally(() => {
+                    this.isLoading = false;
+                    this.toast.show();
+                });
+                
+            }
         },
         getAttachedFile(event) {
             this.file = event.target.files[0];
@@ -391,6 +398,7 @@ export default {
         }
     },
     async mounted() {
+        this.$emit('locationChange', location.pathname);
         await this.getRoles();
         await this.getDepartments();
         await this.getUsers();
@@ -679,7 +687,7 @@ export default {
     <TopBar title="Users" />
     
     <div class="row">
-        <Nav class="col-md-2" active="users" />
+        <Nav class="col-md-2" :active="active" />
         <main class="col-md-10">
             <div class="row mb-1 mt-2">
                 <div class="col-md-4">

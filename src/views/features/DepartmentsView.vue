@@ -5,6 +5,9 @@ import TopBar from '../../components/TopBar.vue';
 import { BIconPenFill, BIconTrash } from 'bootstrap-icons-vue';
 
 export default {
+    props: {
+        "active": String,
+    },
     components: {
         Nav, TopBar,
         BIconPenFill, BIconTrash
@@ -28,6 +31,7 @@ export default {
             deleteModal: null,
         };
     },
+    emits: ['locationChange'],
     watch: {
         searchQuery(newVal, oldVal) {
             this.searchDepartments();
@@ -149,6 +153,7 @@ export default {
         }
     },
     async mounted() {
+        this.$emit('locationChange', location.pathname);
         this.getDepartments();
         this.toast = this.Toast.getOrCreateInstance(this.$refs.feedbackToast);
     },
@@ -170,9 +175,53 @@ export default {
         </div>
         </div>
     </div>
+
+    <!-- Create Department Modal -->
+    <div class="modal fade" id="create-depart-modal" tabindex="-1"
+        aria-labelledby="createDepartmentLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add a new department</h1>
+                    <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <form ref="createForm" @submit.prevent="onSubmit">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" v-model="name" class="form-control" id="name"
+                                aria-describedby="name" required maxlength="50"/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea v-model="description" class="form-control" id="description">
+                        </textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="abbr" class="form-label">Abbreviation</label>
+                            <input type="text" v-model="abbr" class="form-control" id="abbr"
+                                autocomplete="true" required minlength="3" maxlength="5"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" @click="createDepartment" class="btn btn-dark">
+                            <span :hidden="isLoading">Add</span>
+                            <div :hidden="!isLoading" class="spinner-border text-light" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <TopBar title="Departments" />
     <div class="row">
-        <Nav class="col-md-2" active="departs" />
+        <Nav class="col-md-2" :active="active" />
         <main class="col">
             <div class="row mb-3 mt-2">
                 <div class="col-md-6">
@@ -181,53 +230,10 @@ export default {
                     </form>
                 </div>
                 <div class="col">
-                    <!-- Button trigger create user modal -->
+                    <!-- Button trigger create department modal -->
                     <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#create-depart-modal">
                         Create Department
                     </button>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="create-depart-modal" tabindex="-1"
-                        aria-labelledby="createDepartmentLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content bg-dark">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add a new department</h1>
-                                    <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <form ref="createForm" @submit.prevent="onSubmit">
-                                    <div class="modal-body">
-                                        <div class="mb-3">
-                                            <label for="name" class="form-label">Name</label>
-                                            <input type="text" v-model="name" class="form-control" id="name"
-                                                aria-describedby="name" required maxlength="50"/>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="description" class="form-label">Description</label>
-                                            <textarea v-model="description" class="form-control" id="description">
-                                            </textarea>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="abbr" class="form-label">Abbreviation</label>
-                                            <input type="text" v-model="abbr" class="form-control" id="abbr"
-                                                autocomplete="true" required minlength="3" maxlength="5"/>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Cancel</button>
-                                        <button type="submit" @click="createDepartment" class="btn btn-dark">
-                                            <span :hidden="isLoading">Add</span>
-                                            <div :hidden="!isLoading" class="spinner-border text-light" role="status">
-                                                <span class="visually-hidden">Loading...</span>
-                                            </div>
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 

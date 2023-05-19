@@ -13,7 +13,15 @@ body{
   color: white;
 }
 
-.tile:hover{
+.text-accordion:hover{
+  text-decoration: underline;
+}
+
+.text-accordion {
+  color: rgb(122, 188, 255);
+}
+
+.tile-accordion:hover{
   cursor: pointer;
   box-shadow: 1px 1px 20px 5px;
 }
