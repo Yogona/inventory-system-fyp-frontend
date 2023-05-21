@@ -136,7 +136,6 @@ export default {
                     this.stores = res.data.data;
                 }
             }).catch((err) => {
-                console.log(err)
                 const res = err.response;
                 const resData = res.data;
                 if (res.status == 404) {
@@ -151,7 +150,7 @@ export default {
             ).then((res) => {
                 if (res.status == 200) {
                     this.instruments = res.data.data;
-                } console.log(res)
+                } 
             }).catch((err) => {
                 const res = err.response;
                 const resData = res.data;

@@ -2,6 +2,7 @@
 import Nav from "../../components/Nav.vue";
 import TopBar from "../../components/TopBar.vue";
 import Instruments from '../features/Stores/Instruments.vue';
+import Assignments from "./Stores/Assignments.vue";
 import RequestInstruments from '../features/Stores/RequestInstruments.vue';
 import RequestExtensions from "./Stores/RequestExtensions.vue";
 
@@ -222,6 +223,10 @@ export default {
             this.currentTab = Instruments;
             this.storeId = storeId;
         },
+        toggleAssignments(storeId) {
+            this.currentTab = Assignments;
+            this.storeId = storeId;
+        },
         toggleInstrumentsReq() {
             this.currentTab = RequestInstruments;
         },
@@ -234,7 +239,7 @@ export default {
         }
     },
     async mounted() {
-        this.currentTab = null;
+        this.toggleAssignments(1);
         this.$emit('locationChange', location.pathname);
         await this.getStoreKeepers();
         await this.getDepartments();
@@ -452,6 +457,9 @@ export default {
                                     <div class="row">
                                         <div @click="toggleInstruments(store.id)" class="row btn btn-secondary mb-2">
                                             Instruments 
+                                        </div>
+                                        <div @click="toggleAssignments(store.id)" class="row btn btn-secondary mb-2">
+                                            Assignments
                                         </div>
                                         <div @click="toggleExtensions(store.id)" class="row btn btn-secondary mb-2">
                                             Requests Extensions

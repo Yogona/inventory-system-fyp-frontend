@@ -1,5 +1,6 @@
 <script>
-export default{
+export default {
+  emmits: ['locationChange'],
   data() {
     return {
       username: null,
@@ -32,7 +33,7 @@ export default{
                "password": this.password
           }).then((res) => {
             if (res.status == 202) {
-              this.$router.push("/dashboard");
+              this.$emit('locationChange', '/dashboard');
             }
 
           }).catch((err) => {
