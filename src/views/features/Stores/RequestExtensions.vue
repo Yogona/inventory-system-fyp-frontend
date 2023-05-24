@@ -1,8 +1,10 @@
 <script>
 import { BIconPenFill, BIconTrash } from 'bootstrap-icons-vue';
+import Progress from '../../../components/Progress.vue';
+
 export default {
     components: {
-        BIconPenFill, BIconTrash
+        BIconPenFill, BIconTrash, Progress
     },
     props: ["storeId"],
     emits: ['backClicked'],
@@ -80,23 +82,27 @@ export default {
             this.links = tempLinks;
         },
         async getExtensions() {
+            this.isLoading = true;
+
             await this.axios.get(
                 this.api + "/requests/extensions/store/" + this.storeId +
                 "/records/" + this.records + "?page" + this.currentPage
             ).then((res) => {
-                    this.title = "Success";
-                    if (res.status == 200) {
-                        this.fetchResponseData(res);
-                        this.extMessage = res.data.message;
-                    }
-                }).catch((err) => {
-                    const res = err.response;
-                    const resData = res.data;
-                    if (res.status == 404) {
-                        this.requests = resData.data;
-                        this.extMessage = resData.message;
-                    }
-                });
+                this.title = "Success";
+                if (res.status == 200) {
+                    this.fetchResponseData(res);
+                    this.extMessage = res.data.message;
+                }
+            }).catch((err) => {
+                const res = err.response;
+                const resData = res.data;
+                if (res.status == 404) {
+                    this.requests = resData.data;
+                    this.extMessage = resData.message;
+                }
+            }).finally(() => {
+                this.isLoading = false;
+            });
         },
         async searchStores() {
             await this.axios.get(
@@ -246,100 +252,104 @@ export default {
                 </form>
             </div>
         </div>
-        <h2 class="p-5" v-if="extensions == null">
-            {{ extMessage }}
-        </h2>
-        <h2 class="p-5" v-else-if="extensions.length == 0">
-            {{ extMessage }}
-        </h2>
-        <div v-else>
-            <table class="table table-dark table-hover">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Assignment</th>
-                        <th>Requestor</th>
-                        <th>Days</th>
-                        <td></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="extension in extensions">
-                        <td>{{ extension.id }}</td>
-                        <td>{{ extension.assignment.title }}</td>
-                        <td>{{ extension.requester.email }}</td>
-                        <td>{{ extension.extra_days }}</td>
-                        <td>
-                            <div class="row gx-2">
-                                <div class="col">
-                                    <button type="button" :class="{ disabled: isLoading }" @click="approveExtension(extension)"
-                                        class="btn btn-success">
-                                        <span :hidden="isLoading">Approve</span>
-                                        <div :hidden="!isLoading" class="spinner-border text-light"
-                                            role="allocate-progress">
-                                            <span class="visually-hidden">Loading...</span>
-                                        </div>
-                                    </button>
-                                </div>
-                                <div class="col">
-                                    <button type="button" :class="{ disabled: isLoading }" @click="deleteExtension(extension)"
-                                        class="btn btn-danger">
-                                        <span :hidden="isLoading">Delete</span>
-                                        <div :hidden="!isLoading" class="spinner-border text-light"
-                                            role="deallocate-progress">
-                                            <span class="visually-hidden">Loading...</span>
-                                        </div>
-                                    </button>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
 
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="2">
-                            <select v-model="records" @change="getExtensions()" class="form-control">
-                                <option value="5">5</option>
-                                <option value="10" selected>10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                            </select>
-                            Requests per page
-                        </td>
-                        <td colspan="2">Showing {{ from }} - {{ to }} of {{ total }}</td>
-                        <td colspan="7">
-
-                            <nav aria-label="...">
-                                <ul class="pagination justify-content-end bg-dark">
-                                    <li class="page-item" :class="{ disabled: firstPageUrl == null }">
-                                        <span v-if="firstPageUrl == null" class="page-link">First</span>
-                                        <a v-else class="page-link" @click="getInstruments(1)">First</a>
-                                    </li>
-                                    <li class="page-item" :class="{ disabled: prevPageUrl == null }">
-                                        <span v-if="prevPageUrl == null" class="page-link">Previous</span>
-                                        <a v-else class="page-link" @click="getInstruments(--currentPage)">Previous</a>
-                                    </li>
-                                    <li class="page-item" :class="{ active: link.active }"
-                                        :aria-current="{ page: link.active }" v-for="link in links">
-                                        <span v-if="link.active" class="page-link">{{ link.label }}</span>
-                                        <a v-else class="page-link" @click="getInstruments()">{{ link.label }}</a>
-                                    </li>
-                                    <li class="page-item " :class="{ disabled: prevPageUrl == null }">
-                                        <span v-if="prevPageUrl == null" class="page-link">Next</span>
-                                        <a v-else class="page-link" @click="getInstruments(++currentPage)">Next</a>
-                                    </li>
-                                    <li class="page-item " :class="{ disabled: lastPageUrl == null }">
-                                        <span v-if="lastPageUrl == null" class="page-link">Last</span>
-                                        <a v-else class="page-link" @click="getInstruments(lastPage)">Last</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
+        <div class="row justify-content-center">
+            <Progress v-if="isLoading" message="Retrieving Assigned Instruments Extensions" />
+            <h2 class="p-5" v-else-if="extensions == null">
+                {{ extMessage }}
+            </h2>
+            <h2 class="p-5" v-else-if="extensions.length == 0">
+                {{ extMessage }}
+            </h2>
+            <div v-else>
+                <table class="table table-dark table-hover">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Assignment</th>
+                            <th>Requestor</th>
+                            <th>Days</th>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="extension in extensions">
+                            <td>{{ extension.id }}</td>
+                            <td>{{ extension.assignment.title }}</td>
+                            <td>{{ extension.requester.email }}</td>
+                            <td>{{ extension.extra_days }}</td>
+                            <td>
+                                <div class="row gx-2">
+                                    <div class="col">
+                                        <button type="button" :class="{ disabled: isLoading }" @click="approveExtension(extension)"
+                                            class="btn btn-success">
+                                            <span :hidden="isLoading">Approve</span>
+                                            <div :hidden="!isLoading" class="spinner-border text-light"
+                                                role="allocate-progress">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </button>
+                                    </div>
+                                    <div class="col">
+                                        <button type="button" :class="{ disabled: isLoading }" @click="deleteExtension(extension)"
+                                            class="btn btn-danger">
+                                            <span :hidden="isLoading">Delete</span>
+                                            <div :hidden="!isLoading" class="spinner-border text-light"
+                                                role="deallocate-progress">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+    
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2">
+                                <select v-model="records" @change="getExtensions()" class="form-control">
+                                    <option value="5">5</option>
+                                    <option value="10" selected>10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                                Requests per page
+                            </td>
+                            <td colspan="2">Showing {{ from }} - {{ to }} of {{ total }}</td>
+                            <td colspan="7">
+    
+                                <nav aria-label="...">
+                                    <ul class="pagination justify-content-end bg-dark">
+                                        <li class="page-item" :class="{ disabled: firstPageUrl == null }">
+                                            <span v-if="firstPageUrl == null" class="page-link">First</span>
+                                            <a v-else class="page-link" @click="getInstruments(1)">First</a>
+                                        </li>
+                                        <li class="page-item" :class="{ disabled: prevPageUrl == null }">
+                                            <span v-if="prevPageUrl == null" class="page-link">Previous</span>
+                                            <a v-else class="page-link" @click="getInstruments(--currentPage)">Previous</a>
+                                        </li>
+                                        <li class="page-item" :class="{ active: link.active }"
+                                            :aria-current="{ page: link.active }" v-for="link in links">
+                                            <span v-if="link.active" class="page-link">{{ link.label }}</span>
+                                            <a v-else class="page-link" @click="getInstruments()">{{ link.label }}</a>
+                                        </li>
+                                        <li class="page-item " :class="{ disabled: prevPageUrl == null }">
+                                            <span v-if="prevPageUrl == null" class="page-link">Next</span>
+                                            <a v-else class="page-link" @click="getInstruments(++currentPage)">Next</a>
+                                        </li>
+                                        <li class="page-item " :class="{ disabled: lastPageUrl == null }">
+                                            <span v-if="lastPageUrl == null" class="page-link">Last</span>
+                                            <a v-else class="page-link" @click="getInstruments(lastPage)">Last</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
     </div>
 </template>

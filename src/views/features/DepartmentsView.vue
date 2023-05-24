@@ -1,6 +1,7 @@
 <script>
 import Nav from '../../components/Nav.vue';
 import TopBar from '../../components/TopBar.vue';
+import Progress from '../../components/Progress.vue';
 
 import { BIconPenFill, BIconTrash } from 'bootstrap-icons-vue';
 
@@ -10,7 +11,7 @@ export default {
         "user": Object,
     },
     components: {
-        Nav, TopBar,
+        Nav, TopBar, Progress,
         BIconPenFill, BIconTrash
     },
     data() {
@@ -128,6 +129,8 @@ export default {
             });
         },
         async getDepartments() {
+            this.isLoading = true;
+
             await this.axios.get(this.api + "/departments").then((res) => {
                 if (res.status == 200) {
                     this.departments = res.data.data;
@@ -136,6 +139,8 @@ export default {
                 const resData = err.response.data;
                 this.title = resData.message;
                 this.message = this.title;
+            }).finally(() => {
+                this.isLoading = false;
             });
         },
         async searchDepartments() {
@@ -238,112 +243,115 @@ export default {
                 </div>
             </div>
 
-            <h2 class="p-5" v-if="departments == null">
-                {{ message }}
-            </h2>
-            <h2 class="p-5" v-else-if="departments.length == 0">
-                {{ message }}
-            </h2>
-            <table v-else class="table table-dark table-hover">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Abbreviation</th>
-                        <td></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="depart in departments">
-                        <td>{{depart.id}}</td>
-                        <td>{{depart.name}}</td>
-                        <td>{{ depart.description }}</td>
-                        <td>{{ depart.abbr }}</td>
-                        <td>
-                            <div class="row gx-3">
-                                <div class="col">
-                                    <BIconPenFill @click="preFillUpdatingFields(depart)" class="icon-color" data-bs-toggle="modal" data-bs-target="#update-depart-modal" />
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="update-depart-modal" tabindex="-1"
-                                        aria-labelledby="updateDepartmentLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content bg-dark">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Update a department</h1>
-                                                    <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
+            <div class="row justify-content-center">
+                <Progress v-if="isLoading" message="Retrieving Departments" />
+                <h2 class="p-5" v-else-if="departments == null">
+                    {{ message }}
+                </h2>
+                <h2 class="p-5" v-else-if="departments.length == 0">
+                    {{ message }}
+                </h2>
+                <table v-else class="table table-dark table-hover">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Abbreviation</th>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="depart in departments">
+                            <td>{{depart.id}}</td>
+                            <td>{{depart.name}}</td>
+                            <td>{{ depart.description }}</td>
+                            <td>{{ depart.abbr }}</td>
+                            <td>
+                                <div class="row gx-3">
+                                    <div class="col">
+                                        <BIconPenFill @click="preFillUpdatingFields(depart)" class="icon-color" data-bs-toggle="modal" data-bs-target="#update-depart-modal" />
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="update-depart-modal" tabindex="-1"
+                                            aria-labelledby="updateDepartmentLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content bg-dark">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Update a department</h1>
+                                                        <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <form ref="updateForm" @submit.prevent="onSubmit">
+                                                        <div class="modal-body"><span>{{ id }}</span>
+                                                            <div class="mb-3">
+                                                                <label for="name" class="form-label">Name</label>
+                                                                <input type="text" v-model="name" class="form-control" id="name"
+                                                                    aria-describedby="name" required maxlength="50"/>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="description" class="form-label">Description</label>
+                                                                <textarea v-model="description" class="form-control" id="description">
+                                                                </textarea>
+                                                            </div>
+                                                            <div class="mb-3 visually-hidden" hidden="true">
+                                                                <label for="abbr" class="form-label">Abbreviation</label>
+                                                                <input type="text" v-model="abbr" class="form-control" id="abbr"
+                                                                    autocomplete="true" required minlength="3" maxlength="5"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Cancel</button>
+                                                            <button type="submit" @click="updateDepartment" class="btn btn-dark">
+                                                                <span :hidden="isLoading">Update</span>
+                                                                <div :hidden="!isLoading" class="spinner-border text-light" role="status">
+                                                                    <span class="visually-hidden">Loading...</span>
+                                                                </div>
+                                                            </button>
+                                                        </div>
+                                                    </form>
                                                 </div>
-                                                <form ref="updateForm" @submit.prevent="onSubmit">
-                                                    <div class="modal-body"><span>{{ id }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <BIconTrash class="icon-color" @click="showDeleteModalConfirmation(depart)" data-bs-toggle="modal" />
+                                        <!-- Modal -->
+                                        <div ref="deleteModal" class="modal fade" id="delete-depart-modal" tabindex="-1"
+                                            aria-labelledby="deleteDepartmentLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content bg-dark">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete a department!</h1>
+                                                        <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
                                                         <div class="mb-3">
-                                                            <label for="name" class="form-label">Name</label>
-                                                            <input type="text" v-model="name" class="form-control" id="name"
-                                                                aria-describedby="name" required maxlength="50"/>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label for="description" class="form-label">Description</label>
-                                                            <textarea v-model="description" class="form-control" id="description">
-                                                            </textarea>
-                                                        </div>
-                                                        <div class="mb-3 visually-hidden" hidden="true">
-                                                            <label for="abbr" class="form-label">Abbreviation</label>
-                                                            <input type="text" v-model="abbr" class="form-control" id="abbr"
-                                                                autocomplete="true" required minlength="3" maxlength="5"/>
+                                                            Do you want to continue?
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Cancel</button>
-                                                        <button type="submit" @click="updateDepartment" class="btn btn-dark">
-                                                            <span :hidden="isLoading">Update</span>
+                                                            data-bs-dismiss="modal">No</button>
+                                                        <button type="submit" @click="deleteDepartment()" class="btn btn-dark">
+                                                            <span :hidden="isLoading">Yes</span>
                                                             <div :hidden="!isLoading" class="spinner-border text-light" role="status">
                                                                 <span class="visually-hidden">Loading...</span>
                                                             </div>
                                                         </button>
                                                     </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <BIconTrash class="icon-color" @click="showDeleteModalConfirmation(depart)" data-bs-toggle="modal" />
-                                    <!-- Modal -->
-                                    <div ref="deleteModal" class="modal fade" id="delete-depart-modal" tabindex="-1"
-                                        aria-labelledby="deleteDepartmentLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content bg-dark">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Delete a department!</h1>
-                                                    <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="mb-3">
-                                                        Do you want to continue?
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">No</button>
-                                                    <button type="submit" @click="deleteDepartment()" class="btn btn-dark">
-                                                        <span :hidden="isLoading">Yes</span>
-                                                        <div :hidden="!isLoading" class="spinner-border text-light" role="status">
-                                                            <span class="visually-hidden">Loading...</span>
-                                                        </div>
-                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
-                    
-                </tbody>
-            </table>
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
         </main>
 </div></template>
 <style></style>

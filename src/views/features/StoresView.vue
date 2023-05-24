@@ -1,6 +1,7 @@
 <script>
 import Nav from "../../components/Nav.vue";
 import TopBar from "../../components/TopBar.vue";
+import Progress from "../../components/Progress.vue";
 import Instruments from '../features/Stores/Instruments.vue';
 import Assignments from "./Stores/Assignments.vue";
 import RequestInstruments from '../features/Stores/RequestInstruments.vue';
@@ -10,6 +11,7 @@ export default {
     components: {
         Nav,
         TopBar,
+        Progress,
     },
     props: {
         "active": String,
@@ -67,12 +69,18 @@ export default {
             });
         },
         async getStores() {
+            this.isLoading = true;
+
             await this.axios.get(this.api + "/stores/25").then((res) => {
                 if (res.status == 200) {
                     const resData = res.data;
                     this.links = resData.data.links;
                     this.stores = resData.data.data;
                 }
+            }).catch((err) => {
+                
+            }).finally(() => {
+                this.isLoading = false;
             })
         },
         async searchStores() {
@@ -239,7 +247,7 @@ export default {
         }
     },
     async mounted() {
-        this.toggleExtensions(1);
+        // this.toggleExtensions(1);
         this.$emit('locationChange', location.pathname);
         await this.getStoreKeepers();
         await this.getDepartments();
@@ -428,7 +436,8 @@ export default {
                     </div>
                 </div>
             </div>
-            <h2 class="p-5" v-if="stores == null">
+            <Progress v-if="isLoading" message="Retrieving Stores" />
+            <h2 class="p-5" v-else-if="stores == null">
                 {{ message }}
             </h2>
             <h2 class="p-5" v-else-if="stores.length == 0">

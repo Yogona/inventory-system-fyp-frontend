@@ -1,11 +1,12 @@
 <script>
 import { BIconPenFill, BIconTrash } from 'bootstrap-icons-vue';
+import Progress from '../../../components/Progress.vue';
 
 export default {
     emits: ['backClicked'],
     props: ['storeId', "user"],
     components: {
-        BIconPenFill, BIconTrash
+        BIconPenFill, BIconTrash, Progress
     },
     data() {
         return {
@@ -72,6 +73,8 @@ export default {
             this.links = tempLinks;
         },
         async getAssignments() {
+            this.isLoading = true;
+
             await this.axios.get(
                 this.api + "/assignments/store/" + this.storeId + "/records/" + this.records
             ).then((res) => {
@@ -87,6 +90,8 @@ export default {
                     this.assignments = resData.data;
                     this.message = resData.message;
                 }
+            }).finally(() => {
+                this.isLoading = false;
             });
         },
         async getInstruments(page) {
@@ -354,97 +359,102 @@ export default {
                 </form>
             </div>
         </div>
-        <h2 class="p-5" v-if="assignments == null">
-            {{ message }}
-        </h2>
-        <h2 class="p-5" v-else-if="assignments.length == 0">
-            {{ message }}
-        </h2>
-        <table v-else class="table table-dark table-hover">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Title</th>
-                    <th>Attachment</th>
-                    <th>Creator</th>
-                    <th>Assignee</th>
-                    <th>Date</th>
-                    <td></td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="assignment in assignments">
-                    <td>{{ assignment.id }}</td>
-                    <td>{{ assignment.title }}</td>
-                    <td><a :href="generateDownloadUri(assignment.file_path)" class="btn btn-primary" >Download</a></td>
-                    <td>{{ assignment.creator.email }}</td>
-                    <td>{{ assignment.assignee.email }}</td>
-                    <td>{{ assignment.created_at }}</td>
-                    <td>
-                        <div v-if="(user.role_id == 1 || user.role_id == 3)" class="row gx-3">
-                            <!-- Button trigger create user modal -->
-                            <button @click="setAssignmentId(assignment)" type="button" class="btn btn-dark" data-bs-toggle="modal"
-                                data-bs-target="#request-extension-modal">
-                                Extend
-                            </button>
-                            <!-- <div class="col">
-                                <BIconPenFill @click="preFillUpdatingFields(instrument)" class="icon-color"
-                                    data-bs-toggle="modal" data-bs-target="#update-instrument-modal" />
+
+        <div class="row justidy-content-center">
+            <Progress v-if="isLoading" message="Retrieving Assignments" />
+            <h2 class="p-5" v-else-if="assignments == null">
+                {{ message }}
+            </h2>
+            <h2 class="p-5" v-else-if="assignments.length == 0">
+                {{ message }}
+            </h2>
+            <table v-else class="table table-dark table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Attachment</th>
+                        <th>Creator</th>
+                        <th>Assignee</th>
+                        <th>Date</th>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="assignment in assignments">
+                        <td>{{ assignment.id }}</td>
+                        <td>{{ assignment.title }}</td>
+                        <td><a :href="generateDownloadUri(assignment.file_path)" class="btn btn-primary" >Download</a></td>
+                        <td>{{ assignment.creator.email }}</td>
+                        <td>{{ assignment.assignee.email }}</td>
+                        <td>{{ assignment.created_at }}</td>
+                        <td>
+                            <div v-if="(user.role_id == 1 || user.role_id == 3)" class="row gx-3">
+                                <!-- Button trigger create user modal -->
+                                <button @click="setAssignmentId(assignment)" type="button" class="btn btn-dark" data-bs-toggle="modal"
+                                    data-bs-target="#request-extension-modal">
+                                    Extend
+                                </button>
+                                <!-- <div class="col">
+                                    <BIconPenFill @click="preFillUpdatingFields(instrument)" class="icon-color"
+                                        data-bs-toggle="modal" data-bs-target="#update-instrument-modal" />
+                                </div>
+                                <div class="col">
+                                    <BIconTrash class="icon-color" @click="showDeleteModalConfirmation(instrument)"
+                                        data-bs-toggle="modal" />
+                                </div> -->
                             </div>
-                            <div class="col">
-                                <BIconTrash class="icon-color" @click="showDeleteModalConfirmation(instrument)"
-                                    data-bs-toggle="modal" />
-                            </div> -->
-                        </div>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
+    
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="1">
+                            <select v-model="records" @change="getUsers()" class="form-control">
+                                <option value="5">5</option>
+                                <option value="10" selected>10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                            instruments per page
+                        </td>
+                        <td>Showing {{ from }} - {{ to }} of {{ total }}</td>
+                        <td colspan="7">
+    
+                            <nav aria-label="...">
+                                <ul class="pagination justify-content-end bg-dark">
+                                    <li class="page-item" :class="{ disabled: firstPageUrl == null }">
+                                        <span v-if="firstPageUrl == null" class="page-link">First</span>
+                                        <a v-else class="page-link" @click="getInstruments(1)">First</a>
+                                    </li>
+                                    <li class="page-item" :class="{ disabled: prevPageUrl == null }">
+                                        <span v-if="prevPageUrl == null" class="page-link">Previous</span>
+                                        <a v-else class="page-link" @click="getInstruments(--currentPage)">Previous</a>
+                                    </li>
+                                    <li class="page-item" :class="{ active: link.active }" :aria-current="{ page: link.active }"
+                                        v-for="link in links">
+                                        <span v-if="link.active" class="page-link">{{ link.label }}</span>
+                                        <a v-else class="page-link" @click="getInstruments()">{{ link.label }}</a>
+                                    </li>
+                                    <li class="page-item " :class="{ disabled: prevPageUrl == null }">
+                                        <span v-if="prevPageUrl == null" class="page-link">Next</span>
+                                        <a v-else class="page-link" @click="getInstruments(++currentPage)">Next</a>
+                                    </li>
+                                    <li class="page-item " :class="{ disabled: lastPageUrl == null }">
+                                        <span v-if="lastPageUrl == null" class="page-link">Last</span>
+                                        <a v-else class="page-link" @click="getInstruments(lastPage)">Last</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
 
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="1">
-                        <select v-model="records" @change="getUsers()" class="form-control">
-                            <option value="5">5</option>
-                            <option value="10" selected>10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </select>
-                        instruments per page
-                    </td>
-                    <td>Showing {{ from }} - {{ to }} of {{ total }}</td>
-                    <td colspan="7">
-
-                        <nav aria-label="...">
-                            <ul class="pagination justify-content-end bg-dark">
-                                <li class="page-item" :class="{ disabled: firstPageUrl == null }">
-                                    <span v-if="firstPageUrl == null" class="page-link">First</span>
-                                    <a v-else class="page-link" @click="getInstruments(1)">First</a>
-                                </li>
-                                <li class="page-item" :class="{ disabled: prevPageUrl == null }">
-                                    <span v-if="prevPageUrl == null" class="page-link">Previous</span>
-                                    <a v-else class="page-link" @click="getInstruments(--currentPage)">Previous</a>
-                                </li>
-                                <li class="page-item" :class="{ active: link.active }" :aria-current="{ page: link.active }"
-                                    v-for="link in links">
-                                    <span v-if="link.active" class="page-link">{{ link.label }}</span>
-                                    <a v-else class="page-link" @click="getInstruments()">{{ link.label }}</a>
-                                </li>
-                                <li class="page-item " :class="{ disabled: prevPageUrl == null }">
-                                    <span v-if="prevPageUrl == null" class="page-link">Next</span>
-                                    <a v-else class="page-link" @click="getInstruments(++currentPage)">Next</a>
-                                </li>
-                                <li class="page-item " :class="{ disabled: lastPageUrl == null }">
-                                    <span v-if="lastPageUrl == null" class="page-link">Last</span>
-                                    <a v-else class="page-link" @click="getInstruments(lastPage)">Last</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
-
-</div></template>
+</div>
+</template>
 
 <style></style>
