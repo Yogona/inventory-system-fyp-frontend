@@ -4,31 +4,15 @@ export default {
     components: {
         BIconPenFill, BIconTrash
     },
+    props: ["storeId"],
     emits: ['backClicked'],
     data() {
         return {
             isLoading: false,
             searchQuery: null,
 
-            //Request instruments form
-            id: null,
-            storeSearch: "",
-            storeId: null,
-            instrumentSearch: "",
-            quantity: null,
-            selectedInstrument: null,
-            attachedInstruments: [],
-            assignmentTitle: null,
-            file: null,
-            days: null,
-            allocatee: null,
-
             //Collections
-            stores: null,
-            instruments: null,
-            requests: null,
-            crs: null,
-
+            extensions: null,
 
             //Pagination
             records: 10,
@@ -46,6 +30,7 @@ export default {
             //Feedback
             title: null,
             message: null,
+            extMessage: null,
             toast: null,
         };
     },
@@ -71,7 +56,7 @@ export default {
     methods: {
         fetchResponseData(res) {
             const data = res.data.data;
-            this.requests = data.data;
+            this.extensions = data.data;
             this.links = data.links;
             this.from = data.from;
             this.to = data.to;
@@ -94,36 +79,22 @@ export default {
             });
             this.links = tempLinks;
         },
-        async getRequests() {
-            await this.axios.get(this.api + "/requests/records/" + this.records + "?page" + this.currentPage)
-                .then((res) => {
+        async getExtensions() {
+            await this.axios.get(
+                this.api + "/requests/extensions/store/" + this.storeId +
+                "/records/" + this.records + "?page" + this.currentPage
+            ).then((res) => {
                     this.title = "Success";
                     if (res.status == 200) {
                         this.fetchResponseData(res);
-                        this.message = res.data.message;
+                        this.extMessage = res.data.message;
                     }
                 }).catch((err) => {
                     const res = err.response;
                     const resData = res.data;
                     if (res.status == 404) {
                         this.requests = resData.data;
-                        this.message = resData.message;
-                    }
-                });
-        },
-        async getStores() {
-            await this.axios.get(this.api + "/stores")
-                .then((res) => {
-                    if (res.status == 200) {
-                        this.stores = res.data.data;
-                    }
-                }).catch((err) => {
-                    console.log(err)
-                    const res = err.response;
-                    const resData = res.data;
-                    if (res.status == 404) {
-                        this.instruments = resData.data;
-                        this.message = resData.message;
+                        this.extMessage = resData.message;
                     }
                 });
         },
@@ -140,22 +111,6 @@ export default {
                 const resData = res.data;
                 if (res.status == 404) {
                     this.stores = resData.data;
-                    this.message = resData.message;
-                }
-            });
-        },
-        async getInstruments() {
-            await this.axios.get(
-                this.api + "/instruments/store/" + this.storeId
-            ).then((res) => {
-                if (res.status == 200) {
-                    this.instruments = res.data.data;
-                } console.log(res)
-            }).catch((err) => {
-                const res = err.response;
-                const resData = res.data;
-                if (res.status == 404) {
-                    this.instruments = resData.data;
                     this.message = resData.message;
                 }
             });
@@ -177,99 +132,7 @@ export default {
                 }
             });
         },
-        async getCRs() {
-            await this.axios.get(
-                this.api + "/users/role/" + 5
-            ).then((res) => {
-                if (res.status == 200) {
-                    this.crs = res.data.data;
-                }
-            }).catch((err) => {
-                console.log(err)
-                const res = err.response;
-                const resData = res.data;
-                if (res.status == 404) {
-                    this.crs = resData.data;
-                    this.message = resData.message;
-                }
-            });
-        },
-        async requestInstruments() {
-            if (this.$refs.requestInstrumentsForm.checkValidity()) {
-                this.isLoading = true;
-
-                let formData = new FormData();
-                formData.append("store_id", this.storeId);
-                /*
-                    Stringify makes array to be string and not object 
-                    so it can be decoded to array at the server side
-                */
-                formData.append("instruments", JSON.stringify(this.attachedInstruments));
-                formData.append("title", this.assignmentTitle);
-                formData.append("attachment", this.file);
-                formData.append("days", this.days);
-                formData.append("allocatee", this.allocatee);
-
-                await this.axios.post(this.api + "/requests/place", formData).then((res) => {
-                    this.title = "Success";
-
-                    if (res.status == 201) {
-                        this.storeId = null;
-                        this.instrumentId = null;
-                        this.quantity = null;
-                        this.days = null;
-                        this.allocatee = null;
-
-                        this.message = res.data.message;
-                        this.getRequests();
-                    }
-                }).catch((err) => {
-                    const res = err.response;
-                    const resData = res.data;
-
-                    this.title = "Failure"
-                    if (res.status == 422) {
-                        this.title = resData.message;
-                        this.message = resData.data;
-                    } else {
-                        this.message = resData.message;
-                    }
-                }).finally(() => {
-                    this.isLoading = false;
-                    this.toast.show();
-                });
-            }
-        },
-        attachInstrument() {
-            if (this.selectedInstrument == null) {
-                this.title = "Empty";
-                this.message = "Please select instrument.";
-                this.toast.show();
-            } else {
-                const data = {
-                    "quantity": this.quantity,
-                    "instrument_id": this.selectedInstrument.id,
-                    "name": this.selectedInstrument.name
-                };
-
-                this.attachedInstruments.push(data);
-                this.selectedInstrument = null;
-                this.quantity = null;
-            }
-        },
-        detachInstrument(instrumentId) {
-            var index = 0;
-            this.attachedInstruments.forEach((val) => {
-                if (val.instrument_id == instrumentId) {
-                    this.attachedInstruments.splice(index, 1);
-                }
-                ++index;
-            });
-            // this.attachedInstruments.splice(index,1);
-        },
-        getAttachedFile(event) {
-            this.file = event.target.files[0];
-        },
+      
         showDeleteModalConfirmation(request) {
             this.id = request.id;
             this.deleteModal = this.Modal.getOrCreateInstance(
@@ -277,16 +140,15 @@ export default {
             );
             this.deleteModal.show();
         },
-        async deleteRequest() {
+        async deleteExtension(ext) {
             this.isLoading = true;
 
-            await this.axios.delete(this.api + "/requests/delete/" + this.id).then((res) => {
+            await this.axios.delete(this.api + "/requests/delete-extension/" + ext.id).then((res) => {
                 const resData = res.data;
                 this.title = "Success";
                 this.message = resData.message;
-                this.getRequests();
+                
             }).catch((err) => {
-                console.log(err);
                 const res = err.response;
                 const resData = res.data;
 
@@ -295,49 +157,17 @@ export default {
             }).finally(() => {
                 this.isLoading = false;
                 this.toast.show();
-                this.deleteModal.hide();
+                // this.deleteModal.hide();
+                this.getExtensions();
             });
         },
-        preFillUpdatingFields(request) {
-            this.id = request.id;
-            this.allocatee = request.allocatee.id;
-            this.selectedInstrument = request.instrument_id;
-            this.quantity = request.quantity;
-            this.days = request.days;
-        },
-        async updateRequest() {
-            if (this.$refs.updateRequestForm.checkValidity()) {
-                this.isLoading = true;
-
-                const data = {
-                    "allocatee": this.allocatee,
-                    "instrument_id": this.selectedInstrument.id,
-                    "quantity": this.quantity,
-                    "days": this.days
-                };
-
-                this.axios.put(this.api + "/requests/update/" + this.id, data).then((res) => {
-                    this.message = res.data.message;
-                    this.title = "Succeeded!";
-                    this.getRequests();
-                }).catch((err) => {
-                    const resData = err.response.data;
-                    this.title = resData.messsage;
-                    this.message = resData.data;
-                }).finally(() => {
-                    this.isLoading = false;
-                    this.toast.show();
-                });
-
-            }
-        },
-        async allocate(request) {
+        async approveExtension(ext) {
             this.isLoading = true;
 
-            this.axios.patch(this.api + "/requests/allocate/" + request.id).then((res) => {
+            await this.axios.patch(this.api + "/requests/approve-extension/" + ext.id).then((res) => {
                 this.message = res.data.message;
-                this.title = "Success";
-                this.getRequests();
+                this.title = "Succeeded!";
+                this.getExtensions();
             }).catch((err) => {
                 const resData = err.response.data;
                 this.title = resData.messsage;
@@ -347,29 +177,10 @@ export default {
                 this.toast.show();
             });
         },
-        async deallocate(request) {
-            console.log(request)
-            this.isLoading = true;
-
-            this.axios.patch(this.api + "/requests/deallocate/" + request.id).then((res) => {
-                this.message = res.data.message;
-                this.title = "Success";
-                this.getRequests();
-            }).catch((err) => {
-                const resData = err.response.data;
-                this.title = resData.messsage;
-                this.message = resData.data;
-            }).finally(() => {
-                this.isLoading = false;
-                this.toast.show();
-            });
-        }
     },
     async mounted() {
         this.toast = this.Toast.getOrCreateInstance(this.$refs.feedbackToast);
-        await this.getStores();
-        await this.getRequests();
-        await this.getCRs();
+        await this.getExtensions();
     }
 };
 </script>
@@ -387,190 +198,6 @@ export default {
                 </div>
                 <div class="toast-body">
                     {{ message }}
-                </div>
-            </div>
-        </div>
-
-        <!-- Request Instruments Modal -->
-        <div class="modal fade" id="request-instruments-modal" tabindex="-1" aria-labelledby="requestInstrumentsLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content bg-dark">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="requestInstrumentsLabel">Request Extension</h1>
-                        <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                    </div>
-                    <form ref="requestInstrumentsForm" @submit.prevent="onSubmit">
-                        <div class="modal-body">
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <label for="name" class="form-label">Store</label>
-                                </div>
-                                <div class="col-sm-5">
-                                    <input type="search" placeholder="Search stores" v-model="storeSearch"
-                                        class="form-control" />
-                                </div>
-                                <div class="col-sm-5">
-                                    <select placeholder="Select store" v-model="storeId" class="form-control"
-                                        id="instruments-list" required>
-                                        <option disabled>Select store</option>
-                                        <option v-if="stores == null" disabled selected>
-                                            No stores, or improve your search.
-                                        </option>
-                                        <option v-else v-for="store in stores" :value="store.id">
-                                            {{ store.name }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <Transition name="bounce">
-                            </Transition>
-                            <div v-if="attachedInstruments.length == 0" class="row mb-2">
-                                <em>No instruments attached</em>
-                            </div>
-                            <div v-else class="row mb-2">
-                                <span @click="detachInstrument(attachedInstrument.instrument_id)" title="Click to remove"
-                                    v-for="attachedInstrument in attachedInstruments"
-                                    class="mb-2 mx-2 px-auto col-md-2 tile-accordion badge bg-primary">
-                                    {{ attachedInstrument.name }}({{ attachedInstrument.quantity }})
-                                </span>
-                            </div>
-
-                            <div v-if="stores != null" class="row mb-3">
-                                <div class="col">
-                                    <label for="name" class="form-label">Instrument</label>
-                                </div>
-                                <div class="col-sm-4">
-                                    <input type="search" placeholder="Search instruments." v-model="instrumentSearch"
-                                        class="form-control" />
-                                </div>
-                                <div class="col-sm-5">
-                                    <select placeholder="Select instrument" class="form-control"
-                                        v-model="selectedInstrument">
-                                        <option disabled>Select instrument</option>
-                                        <option v-if="instruments == null" disabled selected>
-                                            No instruments, or improve your search.
-                                        </option>
-                                        <option v-else v-for="instrument in instruments" :value="instrument">
-                                            {{ instrument.name }}
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-8 my-2">
-                                    <input id="quantity" placeholder="Enter quantity" v-model="quantity"
-                                        class="form-control" />
-                                </div>
-                                <div class="col-sm my-2">
-                                    <button type="button" @click="attachInstrument()"
-                                        class="btn btn-secondary">Attach</button>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-3">
-                                    <label for="name" class="form-label">Assignment</label>
-                                </div>
-                                <div class="col">
-                                    <label for="name" class="form-label">Title</label>
-                                    <input type="text" placeholder="Enter title for instruments assignment."
-                                        v-model="assignmentTitle" class="form-control" required />
-                                </div>
-                                <div class="col">
-                                    <label for="name" class="form-label">Attachment</label>
-                                    <input @change="getAttachedFile($event)" placeholder="Select assignment file"
-                                        type="file" class="form-control mb-2" required />
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <label for="days" class="form-label">Days</label>
-                                    <input id="days" type="number" min="1" v-model="days" class="form-control" required />
-                                </div>
-                                <div class="col">
-                                    <label for="allocatee" class="form-label">Allocatee</label>
-                                    <select id="allocatee" placeholder="Select allocatee" class="form-control"
-                                        v-model="allocatee">
-                                        <option disabled>Select allocatee</option>
-                                        <option v-if="crs == null">
-                                            No CRs, or improve your search.
-                                        </option>
-                                        <option v-else v-for="cr in crs" :value="cr.id">
-                                            {{ cr.first_name + " " + cr.last_name }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" @click="requestInstruments()" class="btn btn-dark">
-                                <span :hidden="isLoading">Request</span>
-                                <div :hidden="!isLoading" class="spinner-border text-light" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Update Request Modal -->
-        <div class="modal fade" id="update-request-modal" tabindex="-1" aria-labelledby="updateRequestLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content bg-dark">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="updateRequestLabel">Update Request</h1>
-                        <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                    </div>
-                    <form ref="updateRequestForm" @submit.prevent="onSubmit">
-                        <div class="modal-body">
-
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <label for="name" class="form-label">Instrument</label>
-                                </div>
-                                <div v-if="selectedInstrument != null" class="col-sm-4">
-                                    {{ selectedInstrument.name }}
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <label for="days" class="form-label">Days</label>
-                                    <input id="days" type="number" min="1" v-model="days" class="form-control" required />
-                                </div>
-                                <div class="col">
-                                    <label for="quantity" class="form-label">Quantity</label>
-                                    <input id="quantity" type="number" min="1" v-model="quantity" class="form-control"
-                                        required />
-                                </div>
-                                <div class="col">
-                                    <label for="allocatee" class="form-label">Allocatee</label>
-                                    <select id="allocatee" placeholder="Select allocatee" class="form-control"
-                                        v-model="allocatee">
-                                        <option disabled>Select allocatee</option>
-                                        <option v-if="crs == null">
-                                            No CRs, or improve your search.
-                                        </option>
-                                        <option v-else v-for="cr in crs" :value="cr.id">
-                                            {{ cr.first_name + " " + cr.last_name }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" @click="updateRequest()" class="btn btn-dark">
-                                <span :hidden="isLoading">Update</span>
-                                <div :hidden="!isLoading" class="spinner-border text-light" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                            </button>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
@@ -609,91 +236,60 @@ export default {
             <div class="col">
                 <button @click="$emit('backClicked')" class="btn btn-secondary">Go to stores</button>
             </div>
+            <div class="col">
+                <h3>Extensions: </h3>
+            </div>
             <div class="col-md-6">
                 <form class="d-flex" role="search">
                     <input v-model="searchQuery" class="form-control me-2" type="search" placeholder="Type to search"
                         aria-label="Search">
                 </form>
             </div>
-
-            <div class="col">
-                <!-- Button trigger create user modal -->
-                <button type="button" class="btn btn-dark" data-bs-toggle="modal"
-                    data-bs-target="#request-instruments-modal">
-                    Request Extension
-                </button>
-            </div>
         </div>
-        <h2 class="p-5" v-if="requests == null">
-            {{ message }}
+        <h2 class="p-5" v-if="extensions == null">
+            {{ extMessage }}
         </h2>
-        <h2 class="p-5" v-else-if="requests.length == 0">
-            {{ message }}
+        <h2 class="p-5" v-else-if="extensions.length == 0">
+            {{ extMessage }}
         </h2>
         <div v-else>
             <table class="table table-dark table-hover">
                 <thead>
                     <tr>
                         <th>Id</th>
-                        <th>Lecturer Names</th>
-                        <th>CR Names</th>
-                        <th>Instrument</th>
-                        <th>Quantity</th>
+                        <th>Assignment</th>
+                        <th>Requestor</th>
                         <th>Days</th>
-                        <th>Deadline</th>
-                        <th>Status</th>
                         <td></td>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="request in requests">
-                        <td>{{ request.id }}</td>
-                        <td>{{ request.requester.first_name }} {{ request.requester.last_name }}</td>
-                        <td>{{ request.allocatee.first_name }} {{ request.allocatee.last_name }}</td>
-                        <td>{{ request.instrument_id.name }}</td>
-                        <td>{{ request.quantity }}</td>
-                        <td>{{ request.days }}</td>
-                        <td>{{ request.deadline }}</td>
-                        <th>{{ request.status_id.name }}</th>
+                    <tr v-for="extension in extensions">
+                        <td>{{ extension.id }}</td>
+                        <td>{{ extension.assignment.title }}</td>
+                        <td>{{ extension.requester.email }}</td>
+                        <td>{{ extension.extra_days }}</td>
                         <td>
                             <div class="row gx-2">
-                                <div v-if="request.status_id.id == 1" class="col">
-                                    <button type="button" :class="{ disabled: isLoading }" @click="allocate(request)"
+                                <div class="col">
+                                    <button type="button" :class="{ disabled: isLoading }" @click="approveExtension(extension)"
                                         class="btn btn-success">
-                                        <span :hidden="isLoading">Allocate</span>
+                                        <span :hidden="isLoading">Approve</span>
                                         <div :hidden="!isLoading" class="spinner-border text-light"
                                             role="allocate-progress">
                                             <span class="visually-hidden">Loading...</span>
                                         </div>
                                     </button>
                                 </div>
-                                <div v-else-if="request.status_id.id == 2" class="col">
-                                    <button type="button" :class="{ disabled: isLoading }" @click="deallocate(request)"
+                                <div class="col">
+                                    <button type="button" :class="{ disabled: isLoading }" @click="deleteExtension(extension)"
                                         class="btn btn-danger">
-                                        <span :hidden="isLoading">Deallocate</span>
+                                        <span :hidden="isLoading">Delete</span>
                                         <div :hidden="!isLoading" class="spinner-border text-light"
                                             role="deallocate-progress">
                                             <span class="visually-hidden">Loading...</span>
                                         </div>
                                     </button>
-                                </div>
-                                <div v-if="request.status_id.id == 2" class="col">
-                                    <button type="button" :class="{ disabled: isLoading }" @click="allocate(request)"
-                                        class="btn btn-primary">
-                                        <span :hidden="isLoading">Extend</span>
-                                        <div :hidden="!isLoading" class="spinner-border text-light"
-                                            role="allocate-progress">
-                                            <span class="visually-hidden">Loading...</span>
-                                        </div>
-                                    </button>
-                                </div>
-                                <div v-if="request.status_id.id == 1" class="col">
-                                    <BIconPenFill @click="preFillUpdatingFields(request)" class="icon-color"
-                                        data-bs-toggle="modal" data-bs-target="#update-request-modal" />
-                                </div>
-                                <div v-if="request.status_id.id == 1" class="col">
-                                    <BIconTrash class="icon-color" @click="showDeleteModalConfirmation(request)"
-                                        data-bs-toggle="modal" />
                                 </div>
                             </div>
                         </td>
@@ -703,7 +299,7 @@ export default {
                 <tfoot>
                     <tr>
                         <td colspan="2">
-                            <select v-model="records" @change="getRequests()" class="form-control">
+                            <select v-model="records" @change="getExtensions()" class="form-control">
                                 <option value="5">5</option>
                                 <option value="10" selected>10</option>
                                 <option value="25">25</option>
@@ -748,24 +344,5 @@ export default {
     </div>
 </template>
 
-<style>.bounce-enter-active {
-    animation: bounce-in 0.5s;
-}
-
-.bounce-leave-active {
-    animation: bounce-in 0.5s reverse;
-}
-
-@keyframes bounce-in {
-    0% {
-        transform: scale(0);
-    }
-
-    50% {
-        transform: scale(1.25);
-    }
-
-    100% {
-        transform: scale(1);
-    }
-}</style>
+<style>
+</style>

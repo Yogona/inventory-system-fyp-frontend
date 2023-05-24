@@ -551,7 +551,7 @@ export default {
                     <div class="modal-footer">
                         <button type="button" :class="{ disabled: isLoading }" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" :class="{ disabled: isLoading }" @click="updateProfile()" class="btn btn-dark">
-                            <span :hidden="isLoading">Add</span>
+                            <span :hidden="isLoading">Update</span>
                             <div :hidden="!isLoading" class="spinner-border text-light" role="status">
                                 <span class="visually-hidden">Loading...</span>
                             </div>

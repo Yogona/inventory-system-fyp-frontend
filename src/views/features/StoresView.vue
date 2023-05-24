@@ -239,7 +239,7 @@ export default {
         }
     },
     async mounted() {
-        this.toggleAssignments(1);
+        this.toggleExtensions(1);
         this.$emit('locationChange', location.pathname);
         await this.getStoreKeepers();
         await this.getDepartments();

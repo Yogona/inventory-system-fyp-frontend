@@ -11,6 +11,8 @@ export default {
         return {
             isLoading: false,
             searchQuery: null,
+            days: 1,
+            assignmentId: null,
 
             //Collections
             assignments: null,
@@ -121,33 +123,27 @@ export default {
                 }
             });
         },
-        async registerInstrument() {
-            if (this.$refs.registerInstrumentsForm.checkValidity()) {
+        async requestExtension() {
+            if (this.$refs.extensionRequestForm.checkValidity()) {
                 this.isLoading = true;
 
                 const data = {
-                    "name": this.name,
-                    "description": this.description,
-                    "code": this.code,
-                    "quantity": this.quantity,
-                    "store_id": this.storeId
+                    "days": this.days,
+                    "store_id": this.storeId,
+                    "assignment_id": this.assignmentId
                 };
 
-                this.axios.post(this.api + "/instruments/create", data).then((res) => {
-                    this.title = "Succeeded";
+                this.axios.post(this.api + "/requests/extend", data).then((res) => {
+                    this.title = "Success";
 
                     if (res.status == 201) {
 
-                        this.name = null;
-                        this.description = null;
-                        this.code = null;
-                        this.quantity = null;
+                        this.days = 1;
 
                         this.message = res.data.message;
-                        this.getInstruments();
                     }
-                }).catch((err) => {
-                    this.title = "Failed!";
+                }).catch((err) => {console.log(err)
+                    this.title = "Failure";
                     this.message = err.response.data.message;
                 }).finally(() => {
                     this.isLoading = false;
@@ -155,10 +151,8 @@ export default {
                 });
             }
         },
-        preFillUpdatingFields(instrument) {
-            this.id = instrument.id;
-            this.name = instrument.name;
-            this.description = instrument.description;
+        setAssignmentId(assignment) {
+            this.assignmentId = assignment.id;
         },
         async updateInstrument() {
             if (this.$refs.updateForm.checkValidity()) {
@@ -313,6 +307,38 @@ export default {
             </div>
         </div>
 
+        <!-- Request Instruments Extension Modal -->
+        <div class="modal fade" id="request-extension-modal" tabindex="-1"
+            aria-labelledby="requestExtensionLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content bg-dark">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="requestExtensionLabel">Request Instrument Extension</h1>
+                        <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <form ref="extensionRequestForm" @submit.prevent="onSubmit">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="days" class="form-label">Days to extend</label>
+                                <input type="number" v-model="days" class="form-control" id="days"
+                                    aria-describedby="days" min="1" required />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" @click="requestExtension()" class="btn btn-dark">
+                                <span :hidden="isLoading">Request</span>
+                                <div :hidden="!isLoading" class="spinner-border text-light" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="row mb-3 mt-2">
             <div class="col">
                 <button @click="$emit('backClicked')" class="btn btn-secondary">Go to stores</button>
@@ -326,60 +352,6 @@ export default {
                     <input v-model="searchQuery" class="form-control me-2" type="search" placeholder="Type to search"
                         aria-label="Search">
                 </form>
-            </div>
-            <div v-if="(user.role_id == 1 || user.role_id == 3)" class="col">
-                <!-- Button trigger create user modal -->
-                <button type="button" class="btn btn-dark" data-bs-toggle="modal"
-                    data-bs-target="#register-instruments-modal">
-                    Register
-                </button>
-
-                <!-- Request Instruments Modal -->
-                <div class="modal fade" id="register-instruments-modal" tabindex="-1"
-                    aria-labelledby="registerInstrumentsLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content bg-dark">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="registerInstrumentsLabel">Register Instrument</h1>
-                                <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <form ref="registerInstrumentsForm" @submit.prevent="onSubmit">
-                                <div class="modal-body">
-                                    <div class="mb-3">
-                                        <label for="name" class="form-label">Name</label>
-                                        <input type="text" v-model="name" class="form-control" id="name"
-                                            aria-describedby="name" required />
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="description" class="form-label">Description</label>
-                                        <textarea v-model="description" class="form-control" id="description" required>
-                                        </textarea>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="code" class="form-label">Item Code</label>
-                                        <input type="text" v-model="code" class="form-control" id="code" autocomplete="true"
-                                            required minlength="3" maxlength="5" />
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="quantity" class="form-label">Quantity</label>
-                                        <input type="number" v-model="quantity" class="form-control" id="quantity"
-                                            autocomplete="true" required min="1" />
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" @click="registerInstrument()" class="btn btn-dark">
-                                        <span :hidden="isLoading">Add</span>
-                                        <div :hidden="!isLoading" class="spinner-border text-light" role="status">
-                                            <span class="visually-hidden">Loading...</span>
-                                        </div>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
         <h2 class="p-5" v-if="assignments == null">
@@ -410,14 +382,19 @@ export default {
                     <td>{{ assignment.created_at }}</td>
                     <td>
                         <div v-if="(user.role_id == 1 || user.role_id == 3)" class="row gx-3">
-                            <div class="col">
+                            <!-- Button trigger create user modal -->
+                            <button @click="setAssignmentId(assignment)" type="button" class="btn btn-dark" data-bs-toggle="modal"
+                                data-bs-target="#request-extension-modal">
+                                Extend
+                            </button>
+                            <!-- <div class="col">
                                 <BIconPenFill @click="preFillUpdatingFields(instrument)" class="icon-color"
                                     data-bs-toggle="modal" data-bs-target="#update-instrument-modal" />
                             </div>
                             <div class="col">
                                 <BIconTrash class="icon-color" @click="showDeleteModalConfirmation(instrument)"
                                     data-bs-toggle="modal" />
-                            </div>
+                            </div> -->
                         </div>
                     </td>
                 </tr>
