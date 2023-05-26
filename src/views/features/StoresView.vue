@@ -253,7 +253,10 @@ export default {
         await this.getDepartments();
         await this.getStores();
         this.toast = this.Toast.getOrCreateInstance(this.$refs.feedbackToast);
-    }   
+    },   
+    async created() {
+        
+    }
 }
 </script>
 
@@ -385,38 +388,38 @@ export default {
     </div>
 
     <!-- Delete section -->
-        <!-- Delete User Modal -->
-        <div class="modal fade" id="delete-user-modal" tabindex="-1"
-            aria-labelledby="deleteDepartmentLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content bg-dark">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete a store!</h1>
-                        <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+    <!-- Delete User Modal -->
+    <div class="modal fade" id="delete-user-modal" tabindex="-1"
+        aria-labelledby="deleteDepartmentLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Delete a store!</h1>
+                    <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        Do you want to continue?
                     </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            Do you want to continue?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" :class="{ disabled: isLoading }" class="btn btn-secondary"
+                        data-bs-dismiss="modal">No</button>
+                    <button type="submit" :class="{ disabled: isLoading }" @click="deleteStore()" class="btn btn-dark">
+                        <span :hidden="isLoading">Yes</span>
+                        <div :hidden="!isLoading" class="spinner-border text-light" role="status">
+                            <span class="visually-hidden">Loading...</span>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" :class="{ disabled: isLoading }" class="btn btn-secondary"
-                            data-bs-dismiss="modal">No</button>
-                        <button type="submit" :class="{ disabled: isLoading }" @click="deleteStore()" class="btn btn-dark">
-                            <span :hidden="isLoading">Yes</span>
-                            <div :hidden="!isLoading" class="spinner-border text-light" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </button>
-                    </div>
+                    </button>
                 </div>
             </div>
         </div>
+    </div>
 
-    <TopBar title="Stores" />
+    <TopBar title="Stores" :user="user" />
     <div class="row">
-        <Nav class="col-md-2" :user="user" :active="active" />
+        <Nav v-if="user.role_id == 1" class="col-md-2" :user="user" :active="active" />
         <main v-if="currentTab == null" class="col">
             <div class="row mb-3 mt-2">
                 <div class="col-md-6">
@@ -464,7 +467,7 @@ export default {
                                 </div>
                                 <div class="col">
                                     <div class="row">
-                                        <div @click="toggleInstruments(store.id)" class="row btn btn-secondary mb-2">
+                                        <div v-if="user.role_id != 5" @click="toggleInstruments(store.id)" class="row btn btn-secondary mb-2">
                                             Instruments 
                                         </div>
                                         <div @click="toggleAssignments(store.id)" class="row btn btn-secondary mb-2">

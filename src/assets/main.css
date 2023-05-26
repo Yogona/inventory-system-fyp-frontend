@@ -38,7 +38,8 @@ body{
 .error{
   color: red;
 }
-
+/*rgb(63, 69, 75);*/
+/* rgb(122, 188, 255) */
 .container-bg{
   background-color: rgb(63, 69, 75);
 }

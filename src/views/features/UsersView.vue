@@ -690,7 +690,7 @@ export default {
         </div>
     </div>
     
-    <TopBar title="Users" />
+    <TopBar :user="user" title="Users" />
     
     <div class="row">
         <Nav class="col-md-2" :user="user" :active="active" />

@@ -225,7 +225,7 @@ export default {
         </div>
     </div>
 
-    <TopBar title="Departments" />
+    <TopBar :user="user" title="Departments" />
     <div class="row">
         <Nav class="col-md-2" :user="user" :active="active" />
         <main class="col">

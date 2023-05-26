@@ -1,14 +1,14 @@
 <script>
 import { RouterLink } from 'vue-router';
-import { BIconBoxArrowLeft } from 'bootstrap-icons-vue';
+import { BIconBoxArrowLeft, BIconPersonBadgeFill } from 'bootstrap-icons-vue';
+import UserIcon from './icons/UserIcon.vue';
 
 export default {
   props: [
-    "title"
+    "title", "user"
   ],
   components: {
-    RouterLink,
-    BIconBoxArrowLeft,
+    RouterLink, BIconBoxArrowLeft, BIconPersonBadgeFill
   },
   data() {
     return {
@@ -23,7 +23,8 @@ export default {
 
       modals: {
         logoutModal: null,
-      }
+      },
+      role: null,
     };
   },
   methods: {
@@ -48,9 +49,20 @@ export default {
         this.modals.logoutModal.hide();
       });
     },
+    async getRole() {
+      await this.axios.get(this.api+"/roles/" + this.user.role_id).then((res) => {
+        this.role = res.data.data;
+      }).catch((err) => {
+
+      });
+    }
   },
-  mounted() {
+  async mounted() {
     this.toast = this.Toast.getOrCreateInstance(this.$refs.feedbackToast);
+     await this.getRole();
+  },
+  async created() {
+    
   }
 }
 </script>
@@ -101,21 +113,60 @@ export default {
   </div>
 
   <div class="row bg-dark">
-    <div class="col">
+    <div class="col text-center">
       <h2>
         <RouterLink class="navbar-brand white-text" to="/dashboard">
-          Inventory System
+          AIMS
         </RouterLink>
       </h2>
     </div>
-    <div class="col-8">
+    <div class="col-md-8">
       <h3>{{ title }}</h3>
     </div>
     <div class="col">
-      <BIconBoxArrowLeft style="font-size: 2rem" @click="showLogoutModal()"  class="icon-color" />
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <BIconPersonBadgeFill style="font-size: 3rem;" />
+            {{ user.first_name }} {{ user.last_name }}
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item disabled" href="#">Profile</a></li>
+            <li><a class="dropdown-item disabled" href="#">Settings</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item" href="#" @click="showLogoutModal()">
+                <BIconBoxArrowLeft style="font-size: 2rem; color: black;" />
+                Logout
+              </a>
+            </li>
+          </ul>
+        </li>
+
+      </ul>
     </div>
   </div>
   
 </template>
 
-<style></style>
+<style>
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown-menu {display: block;}
+
+a.dropdown-item{
+  color: black;
+}
+</style>

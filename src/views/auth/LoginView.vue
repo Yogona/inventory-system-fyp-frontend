@@ -59,7 +59,13 @@ export default {
 <template>
   <div id="login-pane" class="container-bg white-text">
     <form @submit.prevent="onSubmit">
-      <em class="mb-5 text-center"><h2>Inventory System</h2></em>
+      <div class="text-center h2">
+        <span class="mb-1">ARDHI UNIVERSITY</span>
+      </div>
+      <div class="text-center h4">
+        <em class="mb-5 text-center">INVENTORY MANAGEMENT SYSTEM</em>
+      </div>
+      
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>
         <input 

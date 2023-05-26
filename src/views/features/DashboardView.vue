@@ -12,6 +12,11 @@ export default {
   components: {
     Nav, TopBar
   },
+  data() {
+    return {
+
+    };
+  },
   mounted(){
     this.$emit('locationChange', location.pathname);
   }
@@ -19,9 +24,9 @@ export default {
 </script>
 
 <template>
-  <TopBar title="Dashboard" />
+  <TopBar class="row m-auto" :user="user" title="Dashboard" />
   <div class="row" style="width: 100%;">
-    <Nav class="col-md-2" :user="user" :active="active" />
+    <Nav  class="col-md-2" :user="user" :active="active" />
     <main class="col">
 
     </main>

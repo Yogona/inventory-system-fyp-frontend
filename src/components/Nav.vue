@@ -1,14 +1,34 @@
 <script>
+import {
+  BIconSpeedometer,
+  BIconBuildingFill,
+  BIconPeopleFill,
+  BIconShop
+} from 'bootstrap-icons-vue';
+
 export default {
   props: [
     "active", "user"
   ],
+  components: {
+    BIconSpeedometer,
+    BIconBuildingFill,
+    BIconPeopleFill,
+    BIconShop
+},
   data() {
     return {
       isDashboard: false,
       isDepartments: false,
       isUsers: false,
       isStores: false,
+      dimensions: {
+        navSpacing: 5,
+      },
+      styles: {
+        iconStyle: "font-size: 1rem;",
+    
+      }
     };
   },
   watch: {
@@ -32,10 +52,18 @@ export default {
     expandCollapseStores() {
       this.expandStores = !this.expandStores;
     },
-      
+  },
+  computed: {
+    calcNavSpacing() {
+      return "mb-"+this.dimensions.navSpacing;
+    },
+    iconsStyle() {
+      return "font-size: 1rem; position: relative; top: 0.7em";
+    }
   },
   mounted() {
     this.updateNavHighlight(this.active, true);
+   
   }
 }
 </script>
@@ -48,17 +76,29 @@ export default {
       </button>
       <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
         <ul class="flex-column navbar-nav me-auto mb-2 mb-lg-0 white-text">
-          <li class="nav-item mb-3 ms-3">
-            <RouterLink @click="$emit('menuSelection', 'dash')" class="nav-link" :class="{active:isDashboard}" :aria-current="{page:isDashboard}" to="/dashboard">Dashboard</RouterLink>
+          <li class="nav-item ms-3" :class="calcNavSpacing">
+            <RouterLink @click="$emit('menuSelection', 'dash')" class="nav-link" :class="{active:isDashboard}" :aria-current="{page:isDashboard}" to="/dashboard">
+              <BIconSpeedometer class="me-3" :style="styles.iconStyle" />
+              Dashboard
+            </RouterLink>
           </li>
-          <li v-if="user.role_id == 1" class="nav-item mb-3 ms-3">
-              <RouterLink class="nav-link" :class="{ active: isDepartments }" :aria-current="{ page: isDepartments }" to="/departments">Departments</RouterLink>
-            </li>
-          <li v-if="user.role_id == 1" class="nav-item mb-3 ms-3">
-            <RouterLink class="nav-link" :class="{active:isUsers}" :aria-current="{ page: isUsers }" to="/users">Users</RouterLink>
+          <li v-if="user.role_id == 1" class="nav-item ms-3" :class="calcNavSpacing">
+            <RouterLink class="nav-link col" :class="{ active: isDepartments }" :aria-current="{ page: isDepartments }" to="/departments">
+              <BIconBuildingFill class="me-3" :style="styles.iconStyle" />
+              Departments
+            </RouterLink>
+          </li>
+          <li v-if="user.role_id == 1" class="nav-item ms-3" :class="calcNavSpacing">
+            <RouterLink class="nav-link col" :class="{active:isUsers}" :aria-current="{ page: isUsers }" to="/users">
+              <BIconPeopleFill class="me-3" :style="styles.iconStyle" />
+              Users
+            </RouterLink>
           </li>
           <li class="nav-item mb-3 ms-3">
-            <RouterLink @click="expandCollapseStores()" class="nav-link" :class="{ active: isStores }" :aria-current="{ page: isStores }" to="/stores">Stores</RouterLink>
+            <RouterLink @click="expandCollapseStores()" class="nav-link" :class="{ active: isStores }" :aria-current="{ page: isStores }" to="/stores">
+              <BIconShop class="me-3" :style="styles.iconStyle" />
+              Stores
+            </RouterLink>
           </li>
           
         </ul>
@@ -68,7 +108,17 @@ export default {
 </template>
 
 <style scoped>
-li{
+.nav-item:hover{
+  background-color: rgb(29, 53, 88);
+}
+
+@media(min-width: 1024px){
+  nav{
+    height:36.2em;
+  }
+}
+
+nav-link{
   text-align: center;
   border: 1px rgb(29, 53, 88) solid;
   border-radius: 5px 5px 5px 5px;
