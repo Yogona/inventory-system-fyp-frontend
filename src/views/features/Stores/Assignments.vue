@@ -368,7 +368,7 @@ export default {
             <h2 class="p-5" v-else-if="assignments.length == 0">
                 {{ message }}
             </h2>
-            <table v-else class="table table-dark table-hover">
+            <table v-else class="table table-hover">
                 <thead>
                     <tr>
                         <th>Id</th>

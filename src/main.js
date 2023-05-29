@@ -1,7 +1,8 @@
 import './assets/main.css'
 import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
+
 
 import axios from 'axios';
 import { createApp } from 'vue'

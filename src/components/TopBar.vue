@@ -87,7 +87,7 @@ export default {
   <div ref="logoutModal" class="modal fade" id="logout-modal" tabindex="-1"
       aria-labelledby="logoutLabel" aria-hidden="true">
       <div class="modal-dialog">
-          <div class="modal-content bg-dark">
+          <div class="modal-content container-bg">
               <div class="modal-header">
                   <h1 class="modal-title fs-5" id="logoutLabel">Logout!</h1>
                   <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
@@ -112,10 +112,10 @@ export default {
       </div>
   </div>
 
-  <div class="row bg-dark">
+  <div class="row top-bar">
     <div class="col text-center">
       <h2>
-        <RouterLink class="navbar-brand white-text" to="/dashboard">
+        <RouterLink class="navbar-brand" to="/dashboard">
           AIMS
         </RouterLink>
       </h2>
@@ -127,12 +127,12 @@ export default {
       <ul class="navbar-nav">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <BIconPersonBadgeFill style="font-size: 3rem;" />
+            <BIconPersonBadgeFill style="font-size: 2rem;" />
             {{ user.first_name }} {{ user.last_name }}
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item disabled" href="#">Profile</a></li>
-            <li><a class="dropdown-item disabled" href="#">Settings</a></li>
+            <li><a class="dropdown-item disabled" href="#">Password</a></li>
             <li><hr class="dropdown-divider"></li>
             <li>
               <a class="dropdown-item" href="#" @click="showLogoutModal()">
@@ -168,5 +168,9 @@ export default {
 
 a.dropdown-item{
   color: black;
+}
+
+.top-bar{
+  background-color: #394867;
 }
 </style>

@@ -10,7 +10,7 @@ body{
   padding: 0px 0px 0px 0px;
   width: 100%;
   font-weight: normal;
-  color: white;
+  color: #9BA4B5;
 }
 
 .text-accordion:hover{
@@ -18,7 +18,7 @@ body{
 }
 
 .text-accordion {
-  color: rgb(122, 188, 255);
+  color: #9BA4B5;
 }
 
 .tile-accordion:hover{
@@ -28,11 +28,11 @@ body{
 
 .icon-color{
   cursor: pointer;
-  color: white;
+  color: #9BA4B5;
 }
 
 .toast-body{
-  color: black;
+  color: #394867;
 }
 
 .error{
@@ -40,12 +40,12 @@ body{
 }
 /*rgb(63, 69, 75);*/
 /* rgb(122, 188, 255) */
-.container-bg{
-  background-color: rgb(63, 69, 75);
+div.container-bg{
+  background-color: #394867;
 }
 
 a:visited{
-  color: white;
+  color: #9BA4B5;
 }
 
 .nav-item>a{
@@ -58,6 +58,11 @@ a:hover{
   transition: 0.4s;
 }
 
+button.btn, table.table{
+  background-color: #212A3E;
+  color: #F1F6F9;
+}
+
 @media (hover: hover) {
   a:hover {
     background-color: hsla(209, 80%, 76%, 0.2);
@@ -65,7 +70,7 @@ a:hover{
   }
 }
 
-@media (min-width: 1024px) {
+@media(min-width: 1024px) {
   /* body {
     display: flex;
     place-items: center;

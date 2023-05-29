@@ -23,7 +23,7 @@ export default {
       isUsers: false,
       isStores: false,
       dimensions: {
-        navSpacing: 5,
+        navSpacing: 3,
       },
       styles: {
         iconStyle: "font-size: 1rem;",
@@ -69,13 +69,13 @@ export default {
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark align-self-start sticky-top">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary align-self-start sticky-top">
     <div class="container-fluid">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-        <ul class="flex-column navbar-nav me-auto mb-2 mb-lg-0 white-text">
+        <ul class="flex-column navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item ms-3" :class="calcNavSpacing">
             <RouterLink @click="$emit('menuSelection', 'dash')" class="nav-link" :class="{active:isDashboard}" :aria-current="{page:isDashboard}" to="/dashboard">
               <BIconSpeedometer class="me-3" :style="styles.iconStyle" />
@@ -111,16 +111,22 @@ export default {
 .nav-item:hover{
   background-color: rgb(29, 53, 88);
 }
+nav-link{
+  text-align: center;
+  border-radius: 5px 5px 5px 5px;
+}
+nav.navbar{
+background-color: #394867;
+}
 
 @media(min-width: 1024px){
   nav{
     height:36.2em;
   }
-}
 
-nav-link{
-  text-align: center;
-  border: 1px rgb(29, 53, 88) solid;
-  border-radius: 5px 5px 5px 5px;
+  #navbarTogglerDemo02{
+    position: absolute;
+    top: -15em;
+  }
 }
 </style>

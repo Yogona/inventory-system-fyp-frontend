@@ -57,15 +57,15 @@ export default {
 </script>
 
 <template>
+  <div class="text-center h2">
+    <span class="mb-1">ARDHI UNIVERSITY</span>
+  </div>
+  <div class="text-center h4">
+    <em class="mb-5 text-center">INVENTORY MANAGEMENT SYSTEM</em>
+  </div>
+
   <div id="login-pane" class="container-bg white-text">
     <form @submit.prevent="onSubmit">
-      <div class="text-center h2">
-        <span class="mb-1">ARDHI UNIVERSITY</span>
-      </div>
-      <div class="text-center h4">
-        <em class="mb-5 text-center">INVENTORY MANAGEMENT SYSTEM</em>
-      </div>
-      
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>
         <input 
@@ -80,7 +80,7 @@ export default {
         <label class="form-check-label" for="exampleCheck1">Check me out</label>
       </div> -->
       <div class="row">
-        <button type="submit" @click="login" class="btn btn-dark">
+        <button type="submit" @click="login" class="btn">
           <span :hidden="isLoading">Login</span>
           <div :hidden="!isLoading" class="spinner-border text-light" role="status">
             <span class="visually-hidden">Loading...</span>

@@ -623,7 +623,7 @@ export default {
                 {{ message }}
             </h2>
             <div v-else>
-                <table class="table table-dark table-hover">
+                <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>Id</th>

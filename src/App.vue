@@ -46,7 +46,7 @@ export default {
 
 <style>
 body{
-  background-color:rgb(103, 112, 121);
+  background-color:#F1F6F9;
   width: 100%;
   color: white;
   padding: 0px 0px 0px 0px;
