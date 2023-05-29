@@ -430,7 +430,7 @@ export default {
     <!-- Create User Modal -->
     <div class="modal fade" id="create-user-modal" tabindex="-1" aria-labelledby="createUserLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content bg-dark">
+            <div class="modal-content container-bg">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="createUserLabel">Add a new user</h1>
                     <button type="button" class="btn-close bg-light" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -508,7 +508,7 @@ export default {
     <div class="modal" id="update-profile-modal" tabindex="-1"
         aria-labelledby="updateProfileLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content bg-dark">
+            <div class="modal-content container-bg">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="updateProfileLabel">Update a user profile</h1>
                     <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
@@ -571,7 +571,7 @@ export default {
     <div class="modal fade" id="change-username-modal" tabindex="-1"
             aria-labelledby="changeUsernameLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content bg-dark">
+            <div class="modal-content container-bg">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="changeUsernameLabel">Change username</h1>
                     <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
@@ -602,7 +602,7 @@ export default {
     <div class="modal fade" id="change-email-modal" tabindex="-1"
             aria-labelledby="changeEmailLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content bg-dark">
+            <div class="modal-content container-bg">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="changeUsernameLabel">Change email</h1>
                     <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
@@ -633,7 +633,7 @@ export default {
     <div class="modal fade" id="change-phone-modal" tabindex="-1"
             aria-labelledby="changePhoneLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content bg-dark">
+            <div class="modal-content container-bg">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="changeUsernameLabel">Change phone</h1>
                     <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
@@ -665,7 +665,7 @@ export default {
     <div class="modal fade" id="delete-user-modal" tabindex="-1"
         aria-labelledby="deleteDepartmentLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content bg-dark">
+            <div class="modal-content container-bg">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Delete a department!</h1>
                     <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"

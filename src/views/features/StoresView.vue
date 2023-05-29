@@ -279,7 +279,7 @@ export default {
     <div class="modal fade" id="create-store-modal" tabindex="-1"
         aria-labelledby="createStoreLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content bg-dark">
+            <div class="modal-content container-bg">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Add a new store</h1>
                     <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
@@ -335,7 +335,7 @@ export default {
     <div class="modal fade" id="update-store-modal" tabindex="-1"
         aria-labelledby="createStoreLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content bg-dark">
+            <div class="modal-content container-bg">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="updateStoreLabel">Update a store</h1>
                     <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
@@ -392,7 +392,7 @@ export default {
     <div class="modal fade" id="delete-user-modal" tabindex="-1"
         aria-labelledby="deleteDepartmentLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content bg-dark">
+            <div class="modal-content container-bg">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Delete a store!</h1>
                     <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"

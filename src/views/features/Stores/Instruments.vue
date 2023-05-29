@@ -261,7 +261,7 @@ export default {
         <div class="modal fade" id="update-instrument-modal" tabindex="-1"
             aria-labelledby="updateInstrumentLabel" aria-hidden="true">
             <div class="modal-dialog">
-                <div class="modal-content bg-dark">
+                <div class="modal-content container-bg">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="updateInstrumentLabel">Update an instrument</h1>
                         <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
@@ -299,7 +299,7 @@ export default {
         <div ref="deleteModal" class="modal fade" id="delete-instrument-modal" tabindex="-1"
             aria-labelledby="deleteInstrumentLabel" aria-hidden="true">
             <div class="modal-dialog">
-                <div class="modal-content bg-dark">
+                <div class="modal-content container-bg">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="deleteInstrumentLabel">Delete an instrument!</h1>
                         <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
@@ -348,7 +348,7 @@ export default {
                 <div class="modal fade" id="register-instruments-modal" tabindex="-1" aria-labelledby="registerInstrumentsLabel"
                     aria-hidden="true">
                     <div class="modal-dialog">
-                        <div class="modal-content bg-dark">
+                        <div class="modal-content container-bg">
                             <div class="modal-header">
                                 <h1 class="modal-title fs-5" id="registerInstrumentsLabel">Register Instrument</h1>
                                 <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"

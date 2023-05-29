@@ -186,7 +186,7 @@ export default {
     <div class="modal fade" id="create-depart-modal" tabindex="-1"
         aria-labelledby="createDepartmentLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content bg-dark">
+            <div class="modal-content container-bg">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Add a new department</h1>
                     <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
@@ -275,7 +275,7 @@ export default {
                                         <div class="modal fade" id="update-depart-modal" tabindex="-1"
                                             aria-labelledby="updateDepartmentLabel" aria-hidden="true">
                                             <div class="modal-dialog">
-                                                <div class="modal-content bg-dark">
+                                                <div class="modal-content container-bg">
                                                     <div class="modal-header">
                                                         <h1 class="modal-title fs-5" id="exampleModalLabel">Update a department</h1>
                                                         <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
@@ -320,7 +320,7 @@ export default {
                                         <div ref="deleteModal" class="modal fade" id="delete-depart-modal" tabindex="-1"
                                             aria-labelledby="deleteDepartmentLabel" aria-hidden="true">
                                             <div class="modal-dialog">
-                                                <div class="modal-content bg-dark">
+                                                <div class="modal-content container-bg">
                                                     <div class="modal-header">
                                                         <h1 class="modal-title fs-5" id="exampleModalLabel">Delete a department!</h1>
                                                         <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"

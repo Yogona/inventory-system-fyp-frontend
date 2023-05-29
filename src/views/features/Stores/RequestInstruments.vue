@@ -399,7 +399,7 @@ export default {
         <div class="modal fade" id="request-instruments-modal" tabindex="-1"
             aria-labelledby="requestInstrumentsLabel" aria-hidden="true">
             <div class="modal-dialog">
-                <div class="modal-content bg-dark">
+                <div class="modal-content container-bg">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="requestInstrumentsLabel">Request Instruments</h1>
                         <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
@@ -513,7 +513,7 @@ export default {
         <div class="modal fade" id="update-request-modal" tabindex="-1"
             aria-labelledby="updateRequestLabel" aria-hidden="true">
             <div class="modal-dialog">
-                <div class="modal-content bg-dark">
+                <div class="modal-content container-bg">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="updateRequestLabel">Update Request</h1>
                         <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
@@ -572,7 +572,7 @@ export default {
         <div class="modal fade" id="delete-request-modal" tabindex="-1"
             aria-labelledby="deleteRequestLabel" aria-hidden="true">
             <div class="modal-dialog">
-                <div class="modal-content bg-dark">
+                <div class="modal-content container-bg">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="deleteRequestLabel">Delete a department!</h1>
                         <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"

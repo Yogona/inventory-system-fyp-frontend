@@ -63,6 +63,10 @@ button.btn, table.table{
   color: #F1F6F9;
 }
 
+.modal-content{
+  color: #F1F6F9;
+}
+
 @media (hover: hover) {
   a:hover {
     background-color: hsla(209, 80%, 76%, 0.2);
