@@ -59,6 +59,9 @@ export default {
     },
     iconsStyle() {
       return "font-size: 1rem; position: relative; top: 0.7em";
+    },
+    canSeeNav() {
+      return this.user.role_id == 1 || this.user.role_id == 2;
     }
   },
   mounted() {
@@ -69,7 +72,7 @@ export default {
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-lg bg-body-tertiary align-self-start sticky-top">
+  <nav v-if="canSeeNav" class="navbar navbar-expand-lg bg-body-tertiary align-self-start sticky-top">
     <div class="container-fluid">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -82,7 +85,7 @@ export default {
               Dashboard
             </RouterLink>
           </li>
-          <li v-if="user.role_id == 1" class="nav-item ms-3" :class="calcNavSpacing">
+          <li v-if="canSeeNav" class="nav-item ms-3" :class="calcNavSpacing">
             <RouterLink class="nav-link col" :class="{ active: isDepartments }" :aria-current="{ page: isDepartments }" to="/departments">
               <BIconBuildingFill class="me-3" :style="styles.iconStyle" />
               Departments

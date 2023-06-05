@@ -134,6 +134,10 @@ export default {
             await this.axios.get(this.api + "/departments").then((res) => {
                 if (res.status == 200) {
                     this.departments = res.data.data;
+                    let counter = 0;
+                    this.departments.forEach((depart) => {
+                        depart.counter = ++counter;
+                    })
                 }
             }).catch((err) => {
                 const resData = err.response.data;
@@ -237,7 +241,7 @@ export default {
                 </div>
                 <div class="col">
                     <!-- Button trigger create department modal -->
-                    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#create-depart-modal">
+                    <button v-if="user.role_id == 1" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#create-depart-modal">
                         Create Department
                     </button>
                 </div>
@@ -263,11 +267,11 @@ export default {
                     </thead>
                     <tbody>
                         <tr v-for="depart in departments">
-                            <td>{{depart.id}}</td>
+                            <td>{{depart.counter}}</td>
                             <td>{{depart.name}}</td>
                             <td>{{ depart.description }}</td>
                             <td>{{ depart.abbr }}</td>
-                            <td>
+                            <td v-if="user.role_id == 1">
                                 <div class="row gx-3">
                                     <div class="col">
                                         <BIconPenFill @click="preFillUpdatingFields(depart)" class="icon-color" data-bs-toggle="modal" data-bs-target="#update-depart-modal" />
@@ -353,5 +357,6 @@ export default {
                 </table>
             </div>
         </main>
-</div></template>
+    </div>
+</template>
 <style></style>

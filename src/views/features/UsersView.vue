@@ -73,9 +73,13 @@ export default {
                 }
             });
         },
-        fetchResponseData(res) {
+        fetchResponseData(res) {            
             const data = res.data.data;
             this.users = data.data;
+            let counter = 0;
+            this.users.forEach((user) => {
+                user.counter = ++counter;
+            })
             this.links = data.links;
             this.from = data.from;
             this.to = data.to;
@@ -757,7 +761,7 @@ export default {
                     </thead>
                     <tbody>
                         <tr v-for="user in users">
-                            <td>{{ user.id }}</td>
+                            <td>{{ user.counter }}</td>
                             <td>{{ user.first_name }}</td>
                             <td>{{ user.last_name }}</td>
                             <td>{{ user.username }}</td>
@@ -795,7 +799,7 @@ export default {
                             <td colspan="7">
     
                                 <nav  aria-label="...">
-                                    <ul class="pagination justify-content-end bg-dark">
+                                    <ul class="pagination justify-content-end">
                                         <li class="page-item" :class="{disabled:firstPageUrl == null}"> 
                                             <span v-if="firstPageUrl == null" class="page-link">First</span>
                                             <a v-else class="page-link" @click="getUsers(1)">First</a>

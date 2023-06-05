@@ -38,8 +38,9 @@ body{
 .error{
   color: red;
 }
-/*rgb(63, 69, 75);*/
-/* rgb(122, 188, 255) */
+
+/*  */
+/* hsla(160, 100%, 37%, 1) */
 div.container-bg{
   background-color: #394867;
 }
@@ -68,9 +69,13 @@ button.btn, table.table{
 }
 
 @media (hover: hover) {
-  a:hover {
+  a:hover{
     background-color: hsla(209, 80%, 76%, 0.2);
     color: white;
+  }
+
+  tbody>tr:hover{
+    background-color: white;
   }
 }
 

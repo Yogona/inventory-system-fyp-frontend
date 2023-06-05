@@ -74,6 +74,10 @@ export default {
         fetchResponseData(res) {
             const data = res.data.data;
             this.requests = data.data;
+            let counter = 0;
+            this.requests.forEach((req) => {
+                req.counter = ++counter;
+            });
             this.links = data.links;
             this.from = data.from;
             this.to = data.to;
@@ -639,7 +643,7 @@ export default {
                     </thead>
                     <tbody>
                         <tr v-for="request in requests">
-                            <td>{{ request.id }}</td>
+                            <td>{{ request.counter }}</td>
                             <td>{{ request.requester.first_name }} {{ request.requester.last_name }}</td>
                             <td>{{ request.allocatee.first_name }} {{ request.allocatee.last_name }}</td>
                             <td>{{ request.instrument_id.name }}</td>
@@ -692,7 +696,7 @@ export default {
                             <td colspan="7">
         
                                 <nav  aria-label="...">
-                                    <ul class="pagination justify-content-end bg-dark">
+                                    <ul class="pagination justify-content-end">
                                         <li class="page-item" :class="{ disabled: firstPageUrl == null }"> 
                                             <span v-if="firstPageUrl == null" class="page-link">First</span>
                                             <a v-else class="page-link" @click="getInstruments(1)">First</a>

@@ -419,7 +419,7 @@ export default {
 
     <TopBar title="Stores" :user="user" />
     <div class="row">
-        <Nav v-if="user.role_id == 1" class="col-md-2" :user="user" :active="active" />
+        <Nav class="col-md-2" :user="user" :active="active" />
         <main v-if="currentTab == null" class="col">
             <div class="row mb-3 mt-2">
                 <div class="col-md-6">

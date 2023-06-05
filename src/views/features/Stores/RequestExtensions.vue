@@ -59,6 +59,10 @@ export default {
         fetchResponseData(res) {
             const data = res.data.data;
             this.extensions = data.data;
+            let counter = 0;
+            this.extensions.forEach((ext) => {
+                ext.counter = ++counter;
+            });
             this.links = data.links;
             this.from = data.from;
             this.to = data.to;
@@ -274,7 +278,7 @@ export default {
                     </thead>
                     <tbody>
                         <tr v-for="extension in extensions">
-                            <td>{{ extension.id }}</td>
+                            <td>{{ extension.counter }}</td>
                             <td>{{ extension.assignment.title }}</td>
                             <td>{{ extension.requester.email }}</td>
                             <td>{{ extension.extra_days }}</td>
@@ -321,7 +325,7 @@ export default {
                             <td colspan="7">
     
                                 <nav aria-label="...">
-                                    <ul class="pagination justify-content-end bg-dark">
+                                    <ul class="pagination justify-content-end">
                                         <li class="page-item" :class="{ disabled: firstPageUrl == null }">
                                             <span v-if="firstPageUrl == null" class="page-link">First</span>
                                             <a v-else class="page-link" @click="getInstruments(1)">First</a>

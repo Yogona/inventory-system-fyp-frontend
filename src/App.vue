@@ -15,7 +15,7 @@ export default {
         if (res.status == 200) {
           this.user = res.data;
 
-          if (this.user.role_id == 1) {
+          if (this.user.role_id == 1 || this.user.role_id == 2) {
             this.$router.push(this.pathname);
           } else {
             this.$router.push("/stores");
@@ -48,7 +48,7 @@ export default {
 body{
   background-color:#F1F6F9;
   width: 100%;
-  color: white;
+  color: #F1F6F9;
   padding: 0px 0px 0px 0px;
   margin: 0px 0px 0px 0px;
 }
