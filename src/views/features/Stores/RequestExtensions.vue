@@ -6,7 +6,7 @@ export default {
     components: {
         BIconPenFill, BIconTrash, Progress
     },
-    props: ["storeId"],
+    props: ["storeId", "user"],
     emits: ['backClicked'],
     data() {
         return {
@@ -89,8 +89,8 @@ export default {
             this.isLoading = true;
 
             await this.axios.get(
-                this.api + "/requests/extensions/store/" + this.storeId +
-                "/records/" + this.records + "?page" + this.currentPage
+                this.api + "/extensions/store/" + this.storeId +
+                "/records/" + this.records + "?page=" + this.currentPage
             ).then((res) => {
                 this.title = "Success";
                 if (res.status == 200) {
@@ -101,7 +101,7 @@ export default {
                 const res = err.response;
                 const resData = res.data;
                 if (res.status == 404) {
-                    this.requests = resData.data;
+                    this.extensions = resData.data;
                     this.extMessage = resData.message;
                 }
             }).finally(() => {
@@ -153,7 +153,7 @@ export default {
         async deleteExtension(ext) {
             this.isLoading = true;
 
-            await this.axios.delete(this.api + "/requests/delete-extension/" + ext.id).then((res) => {
+            await this.axios.delete(this.api + "/extensions/" + ext.id).then((res) => {
                 const resData = res.data;
                 this.title = "Success";
                 this.message = resData.message;
@@ -174,7 +174,7 @@ export default {
         async approveExtension(ext) {
             this.isLoading = true;
 
-            await this.axios.patch(this.api + "/requests/approve-extension/" + ext.id).then((res) => {
+            await this.axios.patch(this.api + "/extensions/approve/" + ext.id).then((res) => {
                 this.message = res.data.message;
                 this.title = "Succeeded!";
                 this.getExtensions();
@@ -271,7 +271,7 @@ export default {
                         <tr>
                             <th>Id</th>
                             <th>Assignment</th>
-                            <th>Requestor</th>
+                            <th>Requester</th>
                             <th>Days</th>
                             <td></td>
                         </tr>
@@ -284,7 +284,7 @@ export default {
                             <td>{{ extension.extra_days }}</td>
                             <td>
                                 <div class="row gx-2">
-                                    <div class="col">
+                                    <div class="col" v-if="user.role_id == 1 || user.role_id == 3">
                                         <button type="button" :class="{ disabled: isLoading }" @click="approveExtension(extension)"
                                             class="btn btn-success">
                                             <span :hidden="isLoading">Approve</span>

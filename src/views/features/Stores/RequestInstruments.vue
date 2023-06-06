@@ -49,6 +49,10 @@ export default {
             title: null,
             message: null,
             toast: null,
+            feedBack: {
+                title: null,
+                message: null,
+            }
         };
     },
     watch: {
@@ -220,7 +224,7 @@ export default {
                 formData.append("allocatee", this.allocatee);
 
                 await this.axios.post(this.api + "/requests/place", formData).then((res) => {
-                    this.title = "Success";
+                    this.feedBack.title = "Success";
 
                     if (res.status == 201) {
                         this.storeId        = null;
@@ -229,7 +233,7 @@ export default {
                         this.days           = null;
                         this.allocatee = null;
                         
-                        this.message = res.data.message;
+                        this.feedBack.message = res.data.message;
                         this.getRequests();
                     }
                 }).catch((err) => {
@@ -389,12 +393,12 @@ export default {
             <div ref="feedbackToast" id="feedbackToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
                 <!-- <img src="..." class="rounded me-2" alt="..."> -->
-                <strong class="me-auto">{{ title }}</strong>
+                <strong class="me-auto">{{ feedBack.title }}</strong>
                 <!-- <small>11 mins ago</small> -->
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body">
-                {{ message }}
+                {{ feedBack.message }}
             </div>
             </div>
         </div>
@@ -601,12 +605,15 @@ export default {
             </div>
         </div>
 
-        <div class="row mb-3 mt-2">
+        <div class="row mt-2">
             <div class="col">
                 <button @click="$emit('backClicked')" class="btn btn-secondary">Go to stores</button>
             </div>
-            <div class="col-md-6">
-                <form class="d-flex" role="search">
+            <div class="col h4">
+                    Instruments Requests:
+            </div>
+            <div class="col">
+                <form role="search">
                     <input  v-model="searchQuery" class="form-control me-2" type="search" placeholder="Type to search" aria-label="Search">
                 </form>
             </div>
@@ -618,7 +625,8 @@ export default {
                 </button>
             </div>
         </div>
-        <div class="row justify-content-center">
+        
+        <div class="row mt-2 ms-2">
             <Progress v-if="isLoading" message="Retrieving Instruments Requests" />
             <h2 class="p-5" v-else-if="requests == null">
                 {{ message }}
@@ -626,104 +634,102 @@ export default {
             <h2 class="p-5" v-else-if="requests.length == 0">
                 {{ message }}
             </h2>
-            <div v-else>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Lecturer Names</th>
-                            <th>CR Names</th>
-                            <th>Instrument</th>
-                            <th>Quantity</th>
-                            <th>Days</th>
-                            <th>Deadline</th>
-                            <th>Status</th>
-                            <td></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="request in requests">
-                            <td>{{ request.counter }}</td>
-                            <td>{{ request.requester.first_name }} {{ request.requester.last_name }}</td>
-                            <td>{{ request.allocatee.first_name }} {{ request.allocatee.last_name }}</td>
-                            <td>{{ request.instrument_id.name }}</td>
-                            <td>{{ request.quantity }}</td>
-                            <td>{{ request.days }}</td>
-                            <td>{{ request.deadline }}</td>
-                            <th>{{ request.status_id.name }}</th>
-                            <td>
-                                <div class="row gx-2">
-                                    <div v-if="(request.status_id.id == 1) && (user.role_id == 1 || user.role_id == 3)" class="col">
-                                        <button type="button" :class="{ disabled: isLoading }" @click="allocate(request)" class="btn btn-success">
-                                            <span :hidden="isLoading">Allocate</span>
-                                            <div :hidden="!isLoading" class="spinner-border text-light" role="allocate-progress">
-                                                <span class="visually-hidden">Loading...</span>
-                                            </div>
-                                        </button>
-                                    </div>
-                                    <div v-else-if="(request.status_id.id == 2) && (user.role_id == 1 || user.role_id == 3)" class="col">
-                                        <button type="button" :class="{ disabled: isLoading }" @click="deallocate(request)" class="btn btn-danger">
-                                            <span :hidden="isLoading">Deallocate</span>
-                                            <div :hidden="!isLoading" class="spinner-border text-light" role="deallocate-progress">
-                                                <span class="visually-hidden">Loading...</span>
-                                            </div>
-                                        </button>
-                                    </div>
-                                    <div v-if="request.status_id.id == 1" class="col">
-                                        <BIconPenFill @click="preFillUpdatingFields(request)" class="icon-color" data-bs-toggle="modal" data-bs-target="#update-request-modal" />
-                                    </div>
-                                    <div v-if="request.status_id.id == 1" class="col">
-                                        <BIconTrash class="icon-color" @click="showDeleteModalConfirmation(request)" data-bs-toggle="modal" />
-                                    </div>
+            <table v-else class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Lecturer Names</th>
+                        <th>CR Names</th>
+                        <th>Instrument</th>
+                        <th>Quantity</th>
+                        <th>Days</th>
+                        <th>Deadline</th>
+                        <th>Status</th>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="request in requests">
+                        <td>{{ request.counter }}</td>
+                        <td>{{ request.requester.first_name }} {{ request.requester.last_name }}</td>
+                        <td>{{ request.allocatee.first_name }} {{ request.allocatee.last_name }}</td>
+                        <td>{{ request.instrument_id.name }}</td>
+                        <td>{{ request.quantity }}</td>
+                        <td>{{ request.days }}</td>
+                        <td>{{ request.deadline }}</td>
+                        <th>{{ request.status_id.name }}</th>
+                        <td>
+                            <div class="row gx-2">
+                                <div v-if="(request.status_id.id == 1) && (user.role_id == 1 || user.role_id == 3)" class="col">
+                                    <button type="button" :class="{ disabled: isLoading }" @click="allocate(request)" class="btn btn-success">
+                                        <span :hidden="isLoading">Allocate</span>
+                                        <div :hidden="!isLoading" class="spinner-border text-light" role="allocate-progress">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </button>
                                 </div>
-                            </td>
-                        </tr>
-                
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="2">
-                                <select v-model="records" @change="getRequests()" class="form-control">
-                                    <option value="5">5</option>
-                                    <option value="10" selected>10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                                Requests per page
-                            </td>
-                            <td colspan="2">Showing {{ from }} - {{ to }} of {{ total }}</td>
-                            <td colspan="7">
-        
-                                <nav  aria-label="...">
-                                    <ul class="pagination justify-content-end">
-                                        <li class="page-item" :class="{ disabled: firstPageUrl == null }"> 
-                                            <span v-if="firstPageUrl == null" class="page-link">First</span>
-                                            <a v-else class="page-link" @click="getInstruments(1)">First</a>
-                                        </li>
-                                        <li class="page-item" :class="{ disabled: prevPageUrl == null }">
-                                            <span v-if="prevPageUrl == null" class="page-link">Previous</span>
-                                            <a v-else class="page-link" @click="getInstruments(--currentPage)">Previous</a>
-                                        </li>
-                                        <li class="page-item" :class="{ active: link.active }" :aria-current="{ page: link.active }" v-for="link in links">
-                                            <span v-if="link.active" class="page-link">{{ link.label }}</span>
-                                            <a v-else class="page-link" @click="getInstruments()">{{ link.label }}</a>
-                                        </li>
-                                        <li class="page-item " :class="{ disabled: prevPageUrl == null }">
-                                            <span v-if="prevPageUrl == null" class="page-link">Next</span>
-                                            <a v-else class="page-link" @click="getInstruments(++currentPage)">Next</a>
-                                        </li>
-                                        <li class="page-item " :class="{ disabled: lastPageUrl == null }"> 
-                                            <span v-if="lastPageUrl == null" class="page-link">Last</span>
-                                            <a v-else class="page-link" @click="getInstruments(lastPage)">Last</a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
+                                <div v-else-if="(request.status_id.id == 2) && (user.role_id == 1 || user.role_id == 3)" class="col">
+                                    <button type="button" :class="{ disabled: isLoading }" @click="deallocate(request)" class="btn btn-danger">
+                                        <span :hidden="isLoading">Deallocate</span>
+                                        <div :hidden="!isLoading" class="spinner-border text-light" role="deallocate-progress">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div v-if="request.status_id.id == 1" class="col">
+                                    <BIconPenFill @click="preFillUpdatingFields(request)" class="icon-color" data-bs-toggle="modal" data-bs-target="#update-request-modal" />
+                                </div>
+                                <div v-if="request.status_id.id == 1" class="col">
+                                    <BIconTrash class="icon-color" @click="showDeleteModalConfirmation(request)" data-bs-toggle="modal" />
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+            
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2">
+                            <select v-model="records" @change="getRequests()" class="form-control">
+                                <option value="5">5</option>
+                                <option value="10" selected>10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                            Requests per page
+                        </td>
+                        <td colspan="2">Showing {{ from }} - {{ to }} of {{ total }}</td>
+                        <td colspan="7">
+    
+                            <nav  aria-label="...">
+                                <ul class="pagination justify-content-end">
+                                    <li class="page-item" :class="{ disabled: firstPageUrl == null }"> 
+                                        <span v-if="firstPageUrl == null" class="page-link">First</span>
+                                        <a v-else class="page-link" @click="getInstruments(1)">First</a>
+                                    </li>
+                                    <li class="page-item" :class="{ disabled: prevPageUrl == null }">
+                                        <span v-if="prevPageUrl == null" class="page-link">Previous</span>
+                                        <a v-else class="page-link" @click="getInstruments(--currentPage)">Previous</a>
+                                    </li>
+                                    <li class="page-item" :class="{ active: link.active }" :aria-current="{ page: link.active }" v-for="link in links">
+                                        <span v-if="link.active" class="page-link">{{ link.label }}</span>
+                                        <a v-else class="page-link" @click="getInstruments()">{{ link.label }}</a>
+                                    </li>
+                                    <li class="page-item " :class="{ disabled: prevPageUrl == null }">
+                                        <span v-if="prevPageUrl == null" class="page-link">Next</span>
+                                        <a v-else class="page-link" @click="getInstruments(++currentPage)">Next</a>
+                                    </li>
+                                    <li class="page-item " :class="{ disabled: lastPageUrl == null }"> 
+                                        <span v-if="lastPageUrl == null" class="page-link">Last</span>
+                                        <a v-else class="page-link" @click="getInstruments(lastPage)">Last</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
     </div>
 </template>

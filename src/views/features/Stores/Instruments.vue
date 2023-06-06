@@ -423,7 +423,7 @@ export default {
                         <td>{{ instrument.description }}</td>
                         <td>{{ instrument.quantity }}</td>
                         <td>{{ instrument.code }}</td>
-                        <td>{{ instrument.added_by }}</td>
+                        <td>{{ instrument.added_by.first_name }} {{ instrument.added_by.last_name }}</td>
                         <td>
                             <div v-if="(user.role_id == 1 || user.role_id == 3)" class="row gx-3">
                                 <div class="col">

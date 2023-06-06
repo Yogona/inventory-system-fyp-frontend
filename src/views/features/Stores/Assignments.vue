@@ -142,7 +142,7 @@ export default {
                     "assignment_id": this.assignmentId
                 };
 
-                this.axios.post(this.api + "/requests/extend", data).then((res) => {
+                this.axios.post(this.api + "/extensions", data).then((res) => {
                     this.title = "Success";
 
                     if (res.status == 201) {
@@ -364,7 +364,7 @@ export default {
             </div>
         </div>
 
-        <div class="row justidy-content-center">
+        <div class="row ms-2">
             <Progress v-if="isLoading" message="Retrieving Assignments" />
             <h2 class="p-5" v-else-if="assignments == null">
                 {{ message }}
@@ -393,7 +393,7 @@ export default {
                         <td>{{ assignment.assignee.email }}</td>
                         <td>{{ assignment.created_at }}</td>
                         <td>
-                            <div v-if="(user.role_id == 1 || user.role_id == 3)" class="row gx-3">
+                            <div v-if="(user.role_id == 1 || user.role_id == 4)" class="row gx-3">
                                 <!-- Button trigger create user modal -->
                                 <button @click="setAssignmentId(assignment)" type="button" class="btn btn-dark" data-bs-toggle="modal"
                                     data-bs-target="#request-extension-modal">

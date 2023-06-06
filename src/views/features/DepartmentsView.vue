@@ -267,8 +267,8 @@ export default {
                     </thead>
                     <tbody>
                         <tr v-for="depart in departments">
-                            <td>{{depart.counter}}</td>
-                            <td>{{depart.name}}</td>
+                            <td>{{ depart.counter }}</td>
+                            <td>{{ depart.name }}</td>
                             <td>{{ depart.description }}</td>
                             <td>{{ depart.abbr }}</td>
                             <td v-if="user.role_id == 1">
@@ -352,7 +352,6 @@ export default {
                                 </div>
                             </td>
                         </tr>
-                        
                     </tbody>
                 </table>
             </div>

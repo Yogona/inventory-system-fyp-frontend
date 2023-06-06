@@ -20,17 +20,17 @@ export default {
     async login() {
       if (this.validate()) {
         this.isLoading = true;
-  
+
         await this.axios.get(this.origin + "/sanctum/csrf-cookie").then((res) => {
           this.status = res.status;
         }).catch((err) => {
           alert(err.response.data.message);
         });
-  
+
         if (this.status == 204) {
           await this.axios.post(this.api + "/login", {
-               "username": this.username,
-               "password": this.password
+                "username": this.username,
+                "password": this.password
           }).then((res) => {
             if (res.status == 202) {
               this.$emit('locationChange', '/dashboard');
@@ -41,7 +41,7 @@ export default {
           }).finally(()=>{
             this.password = null;
           });
-             
+              
         }
 
         this.isLoading = false;
@@ -52,16 +52,15 @@ export default {
     // alert("mounted");
     // this.username = "hello";
   },
-    
 }
 </script>
 
 <template>
-  <div class="text-center h2">
-    <span class="mb-1">ARDHI UNIVERSITY</span>
+  <div class="text-center h2" id="topTitle">
+    <span>ARDHI UNIVERSITY</span>
   </div>
   <div class="text-center h4">
-    <em class="mb-5 text-center">INVENTORY MANAGEMENT SYSTEM</em>
+    <em>Geospatial Laboratory Equipment System</em>
   </div>
 
   <div id="login-pane" class="container-bg white-text">
@@ -92,6 +91,10 @@ export default {
 </template>
 
 <style>
+#topTitle{
+  margin-top: 3rem;
+}
+
 #login-pane{
   border-radius: 10px 10px 10px 10px;
   padding: 10px 10px 10px 10px;
@@ -103,7 +106,7 @@ export default {
     padding: 50px 50px 50px 50px;
     position: relative;
     left: 25rem;
-    top: 5rem;
+    top: 1rem;
   }
   /* body {
     display: flex;
