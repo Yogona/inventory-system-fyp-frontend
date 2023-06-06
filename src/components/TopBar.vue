@@ -116,7 +116,7 @@ export default {
     <div class="col text-center">
       <h2>
         <RouterLink class="navbar-brand" to="/dashboard">
-          AIMS
+          Geo Lab System
         </RouterLink>
       </h2>
     </div>
