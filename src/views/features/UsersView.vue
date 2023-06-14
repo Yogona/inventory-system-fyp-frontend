@@ -719,7 +719,7 @@ export default {
                 <div class="col">
                     <!-- Button trigger create user modal -->
                     <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#create-user-modal">
-                        Create User
+                        Add User
                     </button>
                 </div>
                 <div class="col">

@@ -56,38 +56,41 @@ export default {
 </script>
 
 <template>
-  <div class="text-center h2" id="topTitle">
-    <span>ARDHI UNIVERSITY</span>
-  </div>
-  <div class="text-center h4">
-    <em>Geospatial Laboratory Equipment System</em>
-  </div>
+  <main class="row justify-content-center">
+    <div class="text-center h2" id="topTitle">
+      <span>ARDHI UNIVERSITY</span>
+    </div>
+    <div class="text-center h4">
+      <em>Geospatial Laboratory Equipment System</em>
+    </div>
+  
+    <div id="login-pane" class="container-bg white-text">
+      <form @submit.prevent="onSubmit">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input 
+          type="text" v-model="username" class="form-control" id="username" aria-describedby="username" autocomplete="true" required/>
+        </div>
+        <div class="mb-5">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" v-model="password" class="form-control" id="password" autocomplete="true" required/>
+        </div>
+        <!-- <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+          <label class="form-check-label" for="exampleCheck1">Check me out</label>
+        </div> -->
+        <div class="row">
+          <button type="submit" @click="login" class="btn">
+            <span :hidden="isLoading">Login</span>
+            <div :hidden="!isLoading" class="spinner-border text-light" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </button>
+        </div>
+      </form>
+    </div>
 
-  <div id="login-pane" class="container-bg white-text">
-    <form @submit.prevent="onSubmit">
-      <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input 
-        type="text" v-model="username" class="form-control" id="username" aria-describedby="username" autocomplete="true" required/>
-      </div>
-      <div class="mb-5">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" v-model="password" class="form-control" id="password" autocomplete="true" required/>
-      </div>
-      <!-- <div class="mb-3 form-check">
-        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-        <label class="form-check-label" for="exampleCheck1">Check me out</label>
-      </div> -->
-      <div class="row">
-        <button type="submit" @click="login" class="btn">
-          <span :hidden="isLoading">Login</span>
-          <div :hidden="!isLoading" class="spinner-border text-light" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </button>
-      </div>
-    </form>
-  </div>
+  </main>
 </template>
 
 <style>
@@ -105,7 +108,7 @@ export default {
     width: 500px;
     padding: 50px 50px 50px 50px;
     position: relative;
-    left: 25rem;
+    /* left: 25rem; */
     top: 1rem;
   }
   /* body {

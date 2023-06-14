@@ -24,6 +24,10 @@ export default {
             file: null,
             days: null,
             allocatee: null,
+
+            numberOfImpared: 0,
+            fault: null,
+            description: null,
     
             //Collections
             stores: null,
@@ -360,7 +364,7 @@ export default {
                 this.toast.show();
             });
         },
-        async deallocate(request) {console.log(request)
+        async deallocate(request) {
             this.isLoading = true;
 
             this.axios.patch(this.api + "/requests/deallocate/" + request.id).then((res) => {
@@ -375,6 +379,32 @@ export default {
                 this.isLoading = false;
                 this.toast.show();
             });
+        },
+        async markImpared() {
+            if (this.$refs.markImparedInstrumentsForm.checkValidity()) {
+                this.isLoading = true;
+    
+                const data = {
+                    number_of_impared: this.numberOfImpared,
+                    fault: this.fault,
+                    description: this.description,
+                };
+    
+                this.axios.post(this.api + "/requests/mark-impared/" + this.id, data).then((res) => {
+                    this.feedBack.message = res.data.message;
+                    this.feedBack.title = "Success";
+                    this.getRequests();
+                }).catch((err) => {
+                    const resData = err.response.data;
+                    this.feedBack.title = "Failed";
+                    this.feedBack.message = resData.message;
+                }).finally(() => {
+                    this.isLoading = false;
+                    this.toast.show();
+                });
+                
+            }
+
         }
     },
     async mounted() {
@@ -605,6 +635,51 @@ export default {
             </div>
         </div>
 
+        <!-- Mark Instruments Impared -->
+        <div class="modal fade" id="mark-impared-modal" tabindex="-1"
+            aria-labelledby="markImparedLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content container-bg">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="markImparedLabelLabel">Mark Impared</h1>
+                        <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <form ref="markImparedInstrumentsForm" @submit.prevent="onSubmit">
+                        <div class="modal-body">
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="name" class="form-label">Number of impared</label>
+                                </div>
+                                <div class="col-sm-8">
+                                    <input type="number" placeholder="Enter number of impared instruments" v-model="numberOfImpared" class="form-control" min="1"/>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <input type="text" placeholder="Briefly state its fault" v-model="fault" class="form-control" required/>
+                            </div>
+
+                            <div class="row mb-3">
+                                <textarea placeholder="What happened to the instruments" v-model="description" class="form-control" required>
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" @click="markImpared()" class="btn btn-dark">
+                                <span :hidden="isLoading">Mark</span>
+                                <div :hidden="!isLoading" class="spinner-border text-light" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="row mt-2">
             <div class="col">
                 <button @click="$emit('backClicked')" class="btn btn-secondary">Go to stores</button>
@@ -672,6 +747,12 @@ export default {
                                     <button type="button" :class="{ disabled: isLoading }" @click="deallocate(request)" class="btn btn-danger">
                                         <span :hidden="isLoading">Deallocate</span>
                                         <div :hidden="!isLoading" class="spinner-border text-light" role="deallocate-progress">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </button>
+                                    <button type="button" :class="{ disabled: isLoading }" @click="()=>{id = request.id;}" data-bs-toggle="modal" data-bs-target="#mark-impared-modal" class="btn btn-danger">
+                                        <span :hidden="isLoading">Mark impared</span>
+                                        <div :hidden="!isLoading" class="spinner-border text-light" role="mark-impared-progress">
                                             <span class="visually-hidden">Loading...</span>
                                         </div>
                                     </button>

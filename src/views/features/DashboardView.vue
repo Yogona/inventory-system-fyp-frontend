@@ -1,5 +1,5 @@
 <script>
-import { RouterView, RouterLink } from 'vue-router';
+// import { RouterView, RouterLink } from 'vue-router';
 import Nav from '../../components/Nav.vue';
 import TopBar from "../../components/TopBar.vue";
 

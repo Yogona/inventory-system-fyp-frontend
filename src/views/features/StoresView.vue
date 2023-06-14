@@ -6,6 +6,7 @@ import Instruments from '../features/Stores/Instruments.vue';
 import Assignments from "./Stores/Assignments.vue";
 import RequestInstruments from '../features/Stores/RequestInstruments.vue';
 import RequestExtensions from "./Stores/RequestExtensions.vue";
+import ImparedInstruments from "./Stores/ImparedInstruments.vue";
 
 export default {
     components: {
@@ -242,6 +243,10 @@ export default {
             this.currentTab = RequestExtensions;
             this.storeId = storeId;
         },
+        toggleImparedInstruments(storeId) {
+            this.currentTab = ImparedInstruments;
+            this.storeId = storeId;
+        },
         showStores() {
             this.currentTab = null;
         }
@@ -418,7 +423,7 @@ export default {
     </div>
 
     <TopBar title="Stores" :user="user" />
-    <div class="row">
+    <div class="row justify-content-center">
         <Nav class="col-md-2" :user="user" :active="active" />
         <main v-if="currentTab == null" class="col">
             <div class="row mb-3 mt-2">
@@ -476,7 +481,7 @@ export default {
                                         <div @click="toggleExtensions(store.id)" class="row btn btn-secondary mb-2">
                                             Requests Extensions
                                         </div>
-                                        <div @click="prefillForm(store)" class="row btn btn-secondary mb-2 disabled">
+                                        <div @click="toggleImparedInstruments(store.id)" class="row btn btn-secondary mb-2">
                                             Impared Instruments
                                         </div>
                                     </div>
@@ -498,7 +503,7 @@ export default {
                 </div>
             </div>
         </main>
-        <component :user="user" v-else class="col" @back-clicked="()=>{showStores();}" :store-id="storeId" :is="currentTab"/>
+        <component :user="user" v-else class="col align-self-start" @back-clicked="()=>{showStores();}" :store-id="storeId" :is="currentTab"/>
     </div>
 </template>
 

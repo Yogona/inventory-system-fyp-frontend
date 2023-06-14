@@ -241,9 +241,9 @@ export default {
                 </div>
                 <div class="col">
                     <!-- Button trigger create department modal -->
-                    <button v-if="user.role_id == 1" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#create-depart-modal">
+                    <!-- <button v-if="user.role_id == 1" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#create-depart-modal">
                         Create Department
-                    </button>
+                    </button> -->
                 </div>
             </div>
 
@@ -274,7 +274,7 @@ export default {
                             <td v-if="user.role_id == 1">
                                 <div class="row gx-3">
                                     <div class="col">
-                                        <BIconPenFill @click="preFillUpdatingFields(depart)" class="icon-color" data-bs-toggle="modal" data-bs-target="#update-depart-modal" />
+                                        <!-- <BIconPenFill @click="preFillUpdatingFields(depart)" class="icon-color" data-bs-toggle="modal" data-bs-target="#update-depart-modal" /> -->
                                         <!-- Modal -->
                                         <div class="modal fade" id="update-depart-modal" tabindex="-1"
                                             aria-labelledby="updateDepartmentLabel" aria-hidden="true">
@@ -319,7 +319,7 @@ export default {
                                         </div>
                                     </div>
                                     <div class="col">
-                                        <BIconTrash class="icon-color" @click="showDeleteModalConfirmation(depart)" data-bs-toggle="modal" />
+                                        <!-- <BIconTrash class="icon-color" @click="showDeleteModalConfirmation(depart)" data-bs-toggle="modal" /> -->
                                         <!-- Modal -->
                                         <div ref="deleteModal" class="modal fade" id="delete-depart-modal" tabindex="-1"
                                             aria-labelledby="deleteDepartmentLabel" aria-hidden="true">
