@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     async getStatistics() {
-      // this.isLoading = true;
+      this.isLoading = true;
 
       await this.axios.get(this.api + "/statistics").then((res) => {
         if (res.status == 200) {
@@ -40,10 +40,9 @@ export default {
       });
     }
   },
-  async mounted(){
-    // this.$emit('locationChange', location.pathname);
-    await this.getStatistics();
-    console.log(this.user)
+  mounted(){
+    this.$emit('locationChange', location.pathname);
+    this.getStatistics();
   }
 }
 </script>

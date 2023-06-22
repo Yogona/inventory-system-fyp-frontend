@@ -28,7 +28,7 @@ export default {
             prevPageUrl: null,
             nextPageUrl: null,
 
-            message: "Needs to get impared instruments.",
+            message: "Did not fetch impared instruments.",
         }
     },
     methods: {
