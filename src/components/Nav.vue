@@ -85,12 +85,12 @@ export default {
               Dashboard
             </RouterLink>
           </li>
-          <li v-if="canSeeNav" class="nav-item ms-3" :class="calcNavSpacing">
+          <!-- <li v-if="canSeeNav" class="nav-item ms-3" :class="calcNavSpacing">
             <RouterLink class="nav-link col" :class="{ active: isDepartments }" :aria-current="{ page: isDepartments }" to="/departments">
               <BIconBuildingFill class="me-3" :style="styles.iconStyle" />
               Departments
             </RouterLink>
-          </li>
+          </li> -->
           <li v-if="user.role_id == 1" class="nav-item ms-3" :class="calcNavSpacing">
             <RouterLink class="nav-link col" :class="{active:isUsers}" :aria-current="{ page: isUsers }" to="/users">
               <BIconPeopleFill class="me-3" :style="styles.iconStyle" />

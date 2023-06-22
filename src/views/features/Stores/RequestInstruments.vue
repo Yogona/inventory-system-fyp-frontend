@@ -380,6 +380,22 @@ export default {
                 this.toast.show();
             });
         },
+        async sign(request) {
+            this.isLoading = true;
+
+            this.axios.patch(this.api + "/requests/sign/" + request.id).then((res) => {
+                this.feedBack.message = res.data.message;
+                this.feedBack.title = "Success";
+                this.getRequests();
+            }).catch((err) => {
+                const resData = err.response.data;
+                this.feedBack.title = resData.messsage;
+                this.feedBack.message = resData.data;
+            }).finally(() => {
+                this.isLoading = false;
+                this.toast.show();
+            });
+        },
         async markImpared() {
             if (this.$refs.markImparedInstrumentsForm.checkValidity()) {
                 this.isLoading = true;
@@ -715,6 +731,7 @@ export default {
                         <th>Id</th>
                         <th>Lecturer Names</th>
                         <th>CR Names</th>
+                        <th>CR Sign</th>
                         <th>Instrument</th>
                         <th>Quantity</th>
                         <th>Days</th>
@@ -728,6 +745,12 @@ export default {
                         <td>{{ request.counter }}</td>
                         <td>{{ request.requester.first_name }} {{ request.requester.last_name }}</td>
                         <td>{{ request.allocatee.first_name }} {{ request.allocatee.last_name }}</td>
+                        <td>
+                            <span v-if="request.allocatee_sign">
+                                {{ request.allocatee_sign.last_name }}
+                            </span>
+                            <button v-else-if="user.role_id == 5" @click="sign(request)" class="btn btn-success">Sign</button>
+                        </td>
                         <td>{{ request.instrument_id.name }}</td>
                         <td>{{ request.quantity }}</td>
                         <td>{{ request.days }}</td>
@@ -757,16 +780,15 @@ export default {
                                         </div>
                                     </button>
                                 </div>
-                                <div v-if="request.status_id.id == 1" class="col">
+                                <div v-if="request.status_id.id == 1 && (user.role_id == 1 || user.role_id == 4)" class="col">
                                     <BIconPenFill @click="preFillUpdatingFields(request)" class="icon-color" data-bs-toggle="modal" data-bs-target="#update-request-modal" />
                                 </div>
-                                <div v-if="request.status_id.id == 1" class="col">
+                                <div v-if="request.status_id.id == 1 && (user.role_id == 1 || user.role_id == 4)" class="col">
                                     <BIconTrash class="icon-color" @click="showDeleteModalConfirmation(request)" data-bs-toggle="modal" />
                                 </div>
                             </div>
                         </td>
                     </tr>
-            
                 </tbody>
                 <tfoot>
                     <tr>

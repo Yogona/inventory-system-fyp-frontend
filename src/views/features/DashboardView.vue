@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     async getStatistics() {
-      this.isLoading = true;
+      // this.isLoading = true;
 
       await this.axios.get(this.api + "/statistics").then((res) => {
         if (res.status == 200) {

@@ -475,7 +475,7 @@ export default {
                                         <div v-if="user.role_id != 5" @click="toggleInstruments(store.id)" class="row btn btn-secondary mb-2">
                                             Instruments 
                                         </div>
-                                        <div @click="toggleAssignments(store.id)" class="row btn btn-secondary mb-2">
+                                        <div v-if="user.role_id != 3" @click="toggleAssignments(store.id)" class="row btn btn-secondary mb-2">
                                             Assignments
                                         </div>
                                         <div @click="toggleExtensions(store.id)" class="row btn btn-secondary mb-2">
