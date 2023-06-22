@@ -3,7 +3,8 @@ import {
   BIconSpeedometer,
   BIconBuildingFill,
   BIconPeopleFill,
-  BIconShop
+  BIconShop,
+  BIconReceipt
 } from 'bootstrap-icons-vue';
 
 export default {
@@ -14,7 +15,8 @@ export default {
     BIconSpeedometer,
     BIconBuildingFill,
     BIconPeopleFill,
-    BIconShop
+    BIconShop,
+    BIconReceipt
 },
   data() {
     return {
@@ -22,6 +24,7 @@ export default {
       isDepartments: false,
       isUsers: false,
       isStores: false,
+      isReport: false,
       dimensions: {
         navSpacing: 3,
       },
@@ -47,6 +50,8 @@ export default {
         this.isUsers = isActive;
       } else if (path == "/stores") {
         this.isStores = isActive;
+      } else if (path == "/report") {
+        this.isReport = isActive;
       }
     },
     expandCollapseStores() {
@@ -103,7 +108,12 @@ export default {
               Stores
             </RouterLink>
           </li>
-          
+          <li class="nav-item mb-3 ms-3">
+            <RouterLink @click="expandCollapseStores()" class="nav-link" :class="{ active: isReport }" :aria-current="{ page: isReport }" to="/report">
+              <BIconReceipt class="me-3" :style="styles.iconStyle" />
+              Report
+            </RouterLink>
+          </li>
         </ul>
       </div>
     </div>
@@ -124,7 +134,7 @@ background-color: #394867;
 
 @media(min-width: 1024px){
   nav{
-    height:36.2em;
+    height:36.1em;
   }
 
   #navbarTogglerDemo02{
