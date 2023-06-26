@@ -166,7 +166,7 @@ export default {
                     "email": this.email,
                     "phone": this.phone,
                     "role_id": this.selectedRole,
-                    "department_id": this.selectedDepartment
+                    // "department_id": this.selectedDepartment
                 };
     
                 await this.axios.post(this.api + "/users/create", data).then((res) => {
@@ -247,7 +247,7 @@ export default {
                     "last_name": this.lastName,
                     "gender": this.gender,
                     "role_id": this.selectedRole,
-                    "department_id": this.selectedDepartment
+                    // "department_id": this.selectedDepartment
                 };
     
                 await this.axios.put(this.api + "/users/update/" + this.id, data).then((res) => {
@@ -476,13 +476,13 @@ export default {
                                 <option v-for="role in roles" :value="role.id">{{ role.name }}</option>
                             </select>
                         </div>
-                        <div class="mb-3">
+                        <!-- <div class="mb-3">
                             <label for="department" class="form-label">Department</label>
                             <select  placeholder="Select" v-model="selectedDepartment" class="form-control" id="deparment">
                                 <option disabled selected>Select</option>
                                 <option v-for="depart in departments" :value="depart.id">{{ depart.abbr }}</option>
                             </select>
-                        </div>
+                        </div> -->
                         <!-- <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
                         <input type="password" v-model="password" class="form-control" id="password" autocomplete="true" required/>
@@ -543,13 +543,13 @@ export default {
                                 <option v-for="role in roles" :value="role.id">{{ role.name }}</option>
                             </select>
                         </div>
-                        <div class="mb-3">
+                        <!-- <div class="mb-3">
                             <label for="department" class="form-label">Department</label>
                             <select  placeholder="Select" v-model="selectedDepartment" class="form-control" id="deparment">
                                 <option value="null">No department</option>
                                 <option v-for="depart in departments" :value="depart.id">{{ depart.abbr }}</option>
                             </select>
-                        </div>
+                        </div> -->
                         <div class="row">
                             <button type="button" class="btn btn-primary mb-2"  data-bs-target="#change-username-modal" data-bs-toggle="modal">Change username</button>
                             <button type="button" class="btn btn-primary mb-2"  data-bs-target="#change-email-modal" data-bs-toggle="modal">Change email</button>

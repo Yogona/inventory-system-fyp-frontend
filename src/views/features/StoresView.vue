@@ -29,7 +29,7 @@ export default {
             description: null,
             location: null,
             selectedKeeper: null,
-            selectedDepartment: null,
+            // selectedDepartment: null,
 
             //Retrieved lists
             storeKeepers: null,
@@ -313,13 +313,13 @@ export default {
                                 <option v-for="keeper in storeKeepers" :value="keeper.id">{{ keeper.username }}</option>
                             </select>
                         </div>
-                        <div class="mb-3">
+                        <!-- <div class="mb-3">
                             <label for="department" class="form-label">Department</label>
                             <select  placeholder="Select" v-model="selectedDepartment" class="form-control" id="deparment">
                                 <option disabled selected>Select</option>
                                 <option v-for="depart in departments" :value="depart.id">{{ depart.abbr }}</option>
                             </select>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="modal-footer">
                         <button type="button" :class="{disabled: isLoading}" class="btn btn-secondary"
