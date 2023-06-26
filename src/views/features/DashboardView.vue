@@ -68,12 +68,12 @@ export default {
               </div>
             </div>
 
-            <div v-if="user.role_id == 1" class="container-bg white-text col-md-4 summary">
+            <!-- <div v-if="user.role_id == 1" class="container-bg white-text col-md-4 summary">
               <div class="row justify-content-center text-center">
                 <BIconBuilding />
                 <span>{{ statistics.departs }} Departments</span>
               </div>
-            </div>
+            </div> -->
 
             <div class="container-bg white-text col-md-4 summary">
               <div class="row justify-content-center text-center">
