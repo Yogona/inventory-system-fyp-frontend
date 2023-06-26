@@ -85,7 +85,7 @@ export default {
             <div class="container-bg white-text col-md-4 summary">
               <div class="row justify-content-center text-center">
                 <BIconWindowStack />
-                <span>{{ statistics.stores }} Instruments</span>
+                <span>{{ statistics.instruments }} Instruments</span>
               </div>
             </div>
           </div>

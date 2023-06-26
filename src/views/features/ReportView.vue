@@ -56,7 +56,7 @@ export default {
             <h2 class="p-5" v-else-if="report == null">
                 {{ message }}
             </h2>
-            <div v-else class="p-3 container overflow-hidden text-center">
+            <div v-else class="p-3 container overflow-hidden text-start">
                 <div class="p-3 container-bg row">
                     Instruments in all stores: {{ report.instrumentsNum }}
                     <br/>Instruments;
