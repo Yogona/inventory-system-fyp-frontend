@@ -280,11 +280,11 @@ export default {
                         <tr v-for="extension in extensions">
                             <td>{{ extension.counter }}</td>
                             <td>{{ extension.assignment.title }}</td>
-                            <td>{{ extension.requester.email }}</td>
+                            <td>{{ extension.requester.email }}</td>          
                             <td>{{ extension.extra_days }}</td>
                             <td>
                                 <div class="row gx-2">
-                                    <div class="col" v-if="user.role_id == 1 || user.role_id == 3">
+                                    <div class="col" v-if="(user.role_id == 1 || user.role_id == 3) && !extension.approved">
                                         <button type="button" :class="{ disabled: isLoading }" @click="approveExtension(extension)"
                                             class="btn btn-success">
                                             <span :hidden="isLoading">Approve</span>

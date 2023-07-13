@@ -76,7 +76,7 @@ export default {
                     </div>
 
                     Impared instruments;
-                    <div class="row mb-2" v-for="imparedInstrument in imparedInstruments">
+                    <div class="row mb-2" v-for="imparedInstrument in report.imparedInstruments">
                         <div class="col">
                             <label>Name: </label>{{ imparedInstrument.instrument_id.name }}
                         </div>
